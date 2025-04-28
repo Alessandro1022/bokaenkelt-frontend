@@ -1,0 +1,17 @@
+:root {
+  font-family: 'Playfair Display', serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%);
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+} 
