@@ -64,6 +64,8 @@ const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   backgroundPosition: "center",
 }));
 
+const tabList = ["Info", "Calendar", "Photos And Reviews", "Contact"];
+
 const StylistDetailPage = () => {
   const navigate = useNavigate();
   const { stylistId } = useParams();
@@ -78,6 +80,10 @@ const StylistDetailPage = () => {
   const [loading, setLoading] = useState(false);
   const [bookedSlots, setBookedSlots] = useState([]);
   const [error, setError] = useState(null);
+  const _tabIndex = tabList?.findIndex(
+    (item) => item === selectedStylist?.tabs?.[0]
+  );
+  const [tabIndex, setTabIndex] = useState(_tabIndex);
   const [value, setValue] = React.useState(0);
 
   // const stylist = {
@@ -246,7 +252,12 @@ const StylistDetailPage = () => {
     }
   };
   const handleTabChange = (event, newValue) => {
+    const tabName = event.target.innerText;
     setValue(newValue);
+    if (tabName === "Info") return setTabIndex(0);
+    if (tabName === "Calendar") return setTabIndex(1);
+    if (tabName === "Photos And Reviews") return setTabIndex(2);
+    if (tabName === "Contact") return setTabIndex(3);
   };
 
   function CustomTabPanel(props) {
@@ -272,11 +283,7 @@ const StylistDetailPage = () => {
           <Grid item xs={12} md={6} width="100%">
             <StyledCard>
               <StyledCardMedia
-                image={
-                  selectedStylist.imageUrl
-                    ? selectedStylist.imageUrl
-                    : `${API_BASE_URL}/${selectedStylist?.imageUrl}`
-                }
+                image={`${API_BASE_URL}/${selectedStylist.imageUrl}`}
                 title={selectedStylist?.name}
               />
               <Box sx={{ width: "100%" }}>
@@ -284,26 +291,23 @@ const StylistDetailPage = () => {
                   <Tabs
                     value={value}
                     onChange={handleTabChange}
-                    aria-label="basic tabs example"
+                    variant="scrollable"
+                    scrollButtons="auto"
                   >
-                    <Tab label="Info" style={{ textTransform: "capitalize" }} />
-                    <Tab
-                      label="Calendar"
-                      style={{ textTransform: "capitalize" }}
-                    />
-                    <Tab
-                      label="Pictures and Reviews"
-                      style={{ textTransform: "capitalize" }}
-                    />
-                    <Tab
-                      label="Contact"
-                      style={{ textTransform: "capitalize" }}
-                    />
+                    {selectedStylist?.tabs?.map((tab, index) => {
+                      return (
+                        <Tab
+                          key={index}
+                          label={tab}
+                          style={{ textTransform: "capitalize" }}
+                        />
+                      );
+                    })}
                   </Tabs>
                 </Box>
 
                 {/* Info TAB */}
-                <CustomTabPanel value={value} index={0}>
+                <CustomTabPanel value={tabIndex} index={0}>
                   <CardContent>
                     <Typography
                       variant="h4"
@@ -391,7 +395,7 @@ const StylistDetailPage = () => {
                 </CustomTabPanel>
 
                 {/* Calendar TAB */}
-                <CustomTabPanel value={value} index={1}>
+                <CustomTabPanel value={tabIndex} index={1}>
                   <CardContent>
                     <Typography
                       variant="h4"
@@ -511,7 +515,7 @@ const StylistDetailPage = () => {
                 </CustomTabPanel>
 
                 {/* Pictures and Reviews TAB */}
-                <CustomTabPanel value={value} index={2}>
+                <CustomTabPanel value={tabIndex} index={2}>
                   <CardContent>
                     <Typography
                       variant="h4"
@@ -596,7 +600,7 @@ const StylistDetailPage = () => {
                 </CustomTabPanel>
 
                 {/* Location TAB */}
-                <CustomTabPanel value={value} index={3}>
+                <CustomTabPanel value={tabIndex} index={3}>
                   <Typography
                     variant="h4"
                     component="h1"

@@ -119,11 +119,7 @@ const StylistGrid = () => {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={
-                    stylist.imageUrl
-                      ? stylist.imageUrl
-                      : `${API_BASE_URL}/${stylist.imageUrl}`
-                  }
+                  image={`${API_BASE_URL}/${stylist.imageUrl}`}
                   alt={stylist.name}
                   sx={{ objectFit: "cover" }}
                 />
