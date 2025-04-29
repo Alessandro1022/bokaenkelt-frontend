@@ -46,3 +46,30 @@ export function convertEnglishToSwedish(englishDay) {
 
     return dayMap[englishDay] || englishDay; // If not found, return the original
 }
+
+export function getWeekdayIndex(weekday) {
+    const dayMap = {
+        Sunday: 0,
+        "Söndag": 0,
+
+        Monday: 1,
+        "Måndag": 1,
+
+        Tuesday: 2,
+        "Tisdag": 2,
+
+        Wednesday: 3,
+        "Onsdag": 3,
+
+        Thursday: 4,
+        "Torsdag": 4,
+
+        Friday: 5,
+        "Fredag": 5,
+
+        Saturday: 6,
+        "Söndag": 6
+    };
+
+    return dayMap[weekday];
+}

@@ -34,6 +34,7 @@ import {
   convertEnglishToSwedish,
   generateHourlySlots,
   getNextDate,
+  getWeekdayIndex,
 } from "../lib/helper";
 import {
   createGuestRating,
@@ -181,32 +182,51 @@ const StylistDetailPage = () => {
     }
   };
   const handleDateChange = (date) => {
-    const weekday = date.toLocaleDateString("en-US", {
-      weekday: "long",
-    });
-
-    const selectedDayName = convertEnglishToSwedish(weekday);
-
-    if (
-      selectedDayName === "Monday" ||
-      selectedDayName === "Måndag" ||
-      selectedDayName === "Tuesday" ||
-      selectedDayName === "Torsdag"
-    ) {
-      return setError("Inga tider tillgängliga denna dag");
-    }
-
-    const isAvailable =
-      selectedStylist?.availability?.days?.includes(selectedDayName);
-
-    if (!isAvailable) {
-      setError("Inga tider tillgängliga denna dag");
-      return;
-    }
+    // const weekday = date.toLocaleDateString("en-US", {
+    //   weekday: "long",
+    // });
+    // const selectedDayName = convertEnglishToSwedish(weekday);
+    // if (
+    //   selectedDayName.includes(
+    //     "Monday" || "Måndag" || "Tuesday" || "Torsdag"
+    //   ) ||
+    //   weekday.includes("Monday" || "Måndag" || "Tuesday" || "Torsdag")
+    // ) {
+    //   return setError("Inga tider tillgängliga denna dag");
+    // }
+    // const isAvailable =
+    //   selectedStylist?.availability?.days?.includes(selectedDayName) ||
+    //   selectedStylist?.availability?.days?.includes(weekday);
+    // console.log("date -->", date);
+    // console.log("weekday -->", weekday);
+    // console.log("Selected Day Name -->", selectedDayName);
+    // console.log("Slon Avability -->", selectedStylist?.availability?.days);
+    // console.log("isAvailable", isAvailable);
+    // if (!isAvailable) {
+    //   setError("Inga tider tillgängliga denna dag");
+    //   return;
+    // }
+    // setSelectedDate(date);
+    // setError(null);
 
     setSelectedDate(date);
-    setError(null);
     fetchBookedSlots(date);
+  };
+
+  const disableWeekdays = (date) => {
+    const day = date.getDay();
+
+    const allowedDays = selectedStylist?.availability?.days.map((name) =>
+      getWeekdayIndex(name)
+    );
+
+    const newAllowdDays = allowedDays.filter((item) => {
+      if (![1, 2].includes(item)) {
+        return item;
+      }
+    });
+
+    return !newAllowdDays.includes(day);
   };
   const handleTimeSelect = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
@@ -493,6 +513,7 @@ const StylistDetailPage = () => {
                               value={selectedDate}
                               onChange={handleDateChange}
                               minDate={getNextDate()}
+                              shouldDisableDate={disableWeekdays}
                               sx={{
                                 "& .Mui-selected": {
                                   backgroundColor: "#D4AF37 !important",
