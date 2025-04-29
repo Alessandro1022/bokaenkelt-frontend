@@ -313,7 +313,6 @@ const StylistDetailPage = () => {
                         sx={{
                           color: "#D4AF37",
                           fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }, // Responsive font size
-                          textAlign: "center",
                           wordBreak: "break-word", // Break long words if needed
                           whiteSpace: "normal", // Allow text to wrap normally
                           overflowWrap: "break-word", // Safe break for long words
@@ -367,7 +366,6 @@ const StylistDetailPage = () => {
                               sm: "1.8rem",
                               md: "2rem",
                             },
-                            textAlign: "center",
                           }}
                         >
                           Tjänster
@@ -431,7 +429,6 @@ const StylistDetailPage = () => {
                         sx={{
                           color: "#D4AF37",
                           fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }, // Adjust font size based on device
-                          textAlign: "center",
                         }}
                       >
                         Välj datum och tid
@@ -571,16 +568,12 @@ const StylistDetailPage = () => {
                         sx={{
                           color: "#D4AF37",
                           fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
-                          textAlign: "center",
+                          mb: 2,
                         }}
                       >
                         Pictures and Reviews
                       </Typography>
-                      <Grid
-                        container
-                        spacing={3}
-                        sx={{ maxHeight: "25rem", overflow: "hidden" }}
-                      >
+                      <Grid container spacing={3} sx={{ maxHeight: "25rem" }}>
                         {/* USER REVIEWS */}
                         <Grid item xs={12} sm={7} md={7}>
                           {" "}
@@ -664,12 +657,11 @@ const StylistDetailPage = () => {
                       sx={{
                         color: "#D4AF37",
                         fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
-                        textAlign: "center", // Center the title for smaller screens
                       }}
                     >
                       Location
                     </Typography>
-                    <Grid container spacing={5} justifyContent="center">
+                    <Grid container spacing={5}>
                       <Grid
                         item
                         xs={12}
