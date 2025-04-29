@@ -243,8 +243,9 @@ const StylistDetailPage = () => {
     setValue(newValue);
     if (tabName === "Info") return setTabIndex(0);
     if (tabName === "Calendar") return setTabIndex(1);
-    if (tabName === "Photos And Reviews") return setTabIndex(2);
-    if (tabName === "Contact") return setTabIndex(3);
+    if (tabName === "Reviews") return setTabIndex(2);
+    if (tabName === "Photos") return setTabIndex(3);
+    if (tabName === "Contact") return setTabIndex(4);
   };
 
   function CustomTabPanel(props) {
@@ -277,15 +278,23 @@ const StylistDetailPage = () => {
     <Container maxWidth="lg">
       <StyledPaper>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={6} width="100%">
             <StyledCard>
               <StyledCardMedia
                 image={`${API_BASE_URL}/${selectedStylist.imageUrl}`}
                 title={selectedStylist?.name}
-                sx={{ height: { xs: 250, sm: 350 }, width: "100%" }}
+                sx={{
+                  height: { xs: 250, sm: 350, md: 400, lg: 400 },
+                  width: "100%",
+                }}
               />
-              <Box sx={{ width: "100%" }}>
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+              <Box>
+                <Box
+                  sx={{
+                    borderBottom: 1,
+                    borderColor: "divider",
+                  }}
+                >
                   <Tabs
                     value={value}
                     onChange={handleTabChange}
@@ -558,7 +567,7 @@ const StylistDetailPage = () => {
                     </CardContent>
                   </CustomTabPanel>
 
-                  {/* Pictures and Reviews TAB */}
+                  {/* Reviews TAB */}
                   <CustomTabPanel value={tabIndex} index={2}>
                     <CardContent>
                       <Typography
@@ -571,10 +580,9 @@ const StylistDetailPage = () => {
                           mb: 2,
                         }}
                       >
-                        Pictures and Reviews
+                        Reviews
                       </Typography>
                       <Grid container spacing={3} sx={{ maxHeight: "25rem" }}>
-                        {/* USER REVIEWS */}
                         <Grid item xs={12} sm={7} md={7}>
                           {" "}
                           {/* Adjust size based on device */}
@@ -617,18 +625,36 @@ const StylistDetailPage = () => {
                             </Box>
                           ))}
                         </Grid>
+                      </Grid>
+                    </CardContent>
+                  </CustomTabPanel>
 
-                        {/* REVIEW IMAGES */}
+                  {/* Photos */}
+                  <CustomTabPanel value={tabIndex} index={3}>
+                    <CardContent>
+                      <Typography
+                        variant="h4"
+                        component="h1"
+                        gutterBottom
+                        sx={{
+                          color: "#D4AF37",
+                          fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
+                          mb: 2,
+                        }}
+                      >
+                        Photos
+                      </Typography>
+                      <Grid container spacing={3} sx={{ maxHeight: "25rem" }}>
                         <Grid
                           item
                           xs={12}
                           sm={5}
                           md={5}
-                          sx={{
-                            display: "flex",
-                            flexWrap: "wrap",
-                            justifyContent: "space-between",
-                          }}
+                          // sx={{
+                          //   display: "flex",
+                          //   flexWrap: "wrap",
+                          //   justifyContent: "space-between",
+                          // }}
                         >
                           {reviewImages.splice(0, 10).map((img, index) => (
                             <img
@@ -649,7 +675,7 @@ const StylistDetailPage = () => {
                   </CustomTabPanel>
 
                   {/* Location TAB */}
-                  <CustomTabPanel value={tabIndex} index={3}>
+                  <CustomTabPanel value={tabIndex} index={4}>
                     <Typography
                       variant="h4"
                       component="h1"
