@@ -401,18 +401,15 @@ const StylistDetailPage = () => {
                         {selectedStylist?.name}
                       </Typography>
 
-                      <Typography
-                        variant="body1"
-                        paragraph
-                        sx={{ textAlign: "center" }}
-                      >
+                      <Typography variant="body1" mb={2}>
+                        {/* <strong>Bio:</strong> */}
                         {selectedStylist?.bio}
                       </Typography>
-                      <Typography variant="body1" paragraph>
+                      <Typography variant="body1">
                         <strong>Erfarenhet:</strong>{" "}
                         {selectedStylist?.experience}
                       </Typography>
-                      <Typography variant="body1" paragraph>
+                      <Typography variant="body1">
                         <strong>Tillgänglighet:</strong>{" "}
                         {selectedStylist?.availability?.days?.join(", ")}{" "}
                         {selectedStylist?.availability?.hours?.start + " "}-
@@ -434,6 +431,7 @@ const StylistDetailPage = () => {
                           )
                         )}
                       </Box>
+
                       <Box sx={{ mb: 4 }}>
                         <Typography
                           variant="h5"
@@ -849,7 +847,7 @@ const StylistDetailPage = () => {
                     </CardContent>
                   </CustomTabPanel>
 
-                  {/* Location TAB */}
+                  {/* Contact TAB */}
                   <CustomTabPanel value={tabIndex} index={4}>
                     <Typography
                       variant="h4"
@@ -865,10 +863,13 @@ const StylistDetailPage = () => {
                     <Grid container spacing={5}>
                       <Grid
                         item
-                        xs={12}
-                        sm={12}
-                        md={6}
-                        lg={6}
+                        size={{
+                          xs: 12,
+                          sm: 12,
+                          md: 6,
+                          lg: 6,
+                          xl: 6,
+                        }}
                         sx={{ display: "flex", justifyContent: "center" }}
                       >
                         <div
@@ -893,32 +894,30 @@ const StylistDetailPage = () => {
                       </Grid>
                       <Grid
                         item
-                        xs={12}
-                        sm={12}
-                        md={6}
-                        lg={6}
-                        sx={{
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "center",
-                          justifyContent: "center",
+                        size={{
+                          xs: 12,
+                          sm: 12,
+                          md: 6,
+                          lg: 6,
+                          xl: 6,
                         }}
+                        padding={2}
                       >
                         <Typography
                           variant="subtitle1"
-                          sx={{ textAlign: "center", marginBottom: 1 }}
+                          sx={{ marginBottom: 1 }}
                         >
                           <strong>Adress:</strong> {selectedStylist?.location}
                         </Typography>
                         <Typography
                           variant="subtitle1"
-                          sx={{ textAlign: "center", marginBottom: 1 }}
+                          sx={{ marginBottom: 1 }}
                         >
                           <strong>Phone:</strong> {selectedStylist?.phone}
                         </Typography>
                         <Typography
                           variant="subtitle1"
-                          sx={{ textAlign: "center", marginBottom: 1 }}
+                          sx={{ marginBottom: 1 }}
                         >
                           <strong>Email:</strong> {selectedStylist?.email}
                         </Typography>
