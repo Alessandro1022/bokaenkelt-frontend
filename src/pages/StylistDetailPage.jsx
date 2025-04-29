@@ -10,7 +10,7 @@ import {
   CardContent,
   CardMedia,
   Button,
-  Rating,
+  // Rating,
   Chip,
   Alert,
   CircularProgress,
@@ -20,6 +20,8 @@ import {
   TextField,
   TextareaAutosize,
 } from "@mui/material";
+import { Rating } from "react-simple-star-rating";
+
 import { styled } from "@mui/material/styles";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -108,19 +110,24 @@ const StylistDetailPage = () => {
   const { user } = useAuth();
 
   const selectedStylist = location?.state || {};
-
-  const [selectedDate, setSelectedDate] = useState(getNextDate());
-  const [selectedTime, setSelectedTime] = useState(null);
-  const [ratings, setRatings] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [bookedSlots, setBookedSlots] = useState([]);
-  const [error, setError] = useState(null);
   const _tabIndex = tabList?.findIndex(
     (item) => item === selectedStylist?.tabs?.[0]
   );
+
+  const [selectedDate, setSelectedDate] = useState(getNextDate());
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookedSlots, setBookedSlots] = useState([]);
+  const [error, setError] = useState(null);
   const [userReviews, setUserReviews] = useState([]);
-  const [tabIndex, setTabIndex] = useState(_tabIndex);
   const [value, setValue] = React.useState(0);
+  const [ratingForm, setRatingForm] = useState({
+    rating: 0,
+    userName: "",
+    userReview: "",
+  });
+  const [ratingLoader, setRatingLoader] = useState(false);
+  const [tabIndex, setTabIndex] = useState(_tabIndex);
 
   // EFFECTS
   const reviewImages = [
@@ -134,44 +141,6 @@ const StylistDetailPage = () => {
     "https://images.pexels.com/photos/897265/pexels-photo-897265.jpeg",
     "https://images.pexels.com/photos/897265/pexels-photo-897265.jpeg",
     "https://images.pexels.com/photos/897265/pexels-photo-897265.jpeg",
-  ];
-  const reviews = [
-    {
-      name: "Emily Smith",
-      rating: 5.0,
-      description:
-        "Absolutely loved the haircut! Priya did an amazing job and made me feel so comfortable. Will definitely come again.",
-    },
-    {
-      name: "Michael Chen",
-      rating: 4.0,
-      description:
-        "Good service overall. The ambience is relaxing and Kavita was very professional. Just a little delay in my appointment time.",
-    },
-    {
-      name: "Sofia Hernandez",
-      rating: 4.8,
-      description:
-        "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
-    },
-    {
-      name: "Sofia Hernandez",
-      rating: 4.8,
-      description:
-        "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
-    },
-    {
-      name: "Sofia Hernandez",
-      rating: 4.8,
-      description:
-        "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
-    },
-    {
-      name: "Sofia Hernandez",
-      rating: 4.8,
-      description:
-        "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
-    },
   ];
 
   // EFFECTS
@@ -260,18 +229,7 @@ const StylistDetailPage = () => {
         setError("Välj datum och tid för bokningen");
         return;
       }
-      setLoading(true);
-
-      const ratingData = {
-        customer: user?.id || "",
-        stylist: stylistId,
-        rating: ratings,
-      };
-      if (user?.id) {
-        await createRatings(ratingData);
-      } else {
-        await createGuestRating(ratingData);
-      }
+      setBookingLoading(true);
 
       const stateData = {
         stylistId: stylistId,
@@ -283,7 +241,7 @@ const StylistDetailPage = () => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setBookingLoading(false);
     }
   };
   const handleTabChange = (event, newValue) => {
@@ -295,61 +253,45 @@ const StylistDetailPage = () => {
     if (tabName === "Photos") return setTabIndex(3);
     if (tabName === "Contact") return setTabIndex(4);
   };
+  const handleRatingFormChange = (e) => {
+    const { name, value } = e.target;
+    setRatingForm((prev) => ({ ...prev, [name]: value }));
+  };
   const handleRate = async (e) => {
     try {
       e.preventDefault();
-      const userName = document.getElementById("userName").value;
-      const userReview = document.getElementById("userReview").value;
+
+      setRatingLoader(true);
+
       const _data = {
-        rating: ratings,
+        rating: ratingForm.rating,
+        name: ratingForm.userName,
+        review: ratingForm.userReview,
         stylist: stylistId,
-        name: userName,
-        review: userReview,
       };
-      const res = await createRatings(_data);
+      let res = {};
+      if (user?.id) {
+        res = await createRatings(_data);
+      } else {
+        res = await createGuestRating(_data);
+      }
 
       if (res.status === 200) {
-        document.getElementById("userName").value = "";
-        document.getElementById("userReview").value = "";
-        setRatings(0);
+        setRatingForm({ rating: 0, userName: "", userReview: "" });
         fetchStylistRatings();
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setRatingLoader(false);
     }
   };
-
-  function CustomTabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box
-            sx={{
-              p: { xs: 0, sm: 0, md: 4 }, // Adjust padding based on screen size
-              overflowX: "hidden", // Prevent horizontal scrolling on small devices
-              width: "100%", // Ensure the Box takes up the full width
-            }}
-          >
-            {children}
-          </Box>
-        )}
-      </div>
-    );
-  }
 
   return (
     <Container maxWidth="lg">
       <StyledPaper>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6} width="100%">
+          <Grid width="100%">
             <StyledCard>
               <StyledCardMedia
                 image={`${API_BASE_URL}/${selectedStylist.imageUrl}`}
@@ -384,8 +326,14 @@ const StylistDetailPage = () => {
                   </Tabs>
 
                   {/* Info TAB */}
-                  <CustomTabPanel value={tabIndex} index={0}>
-                    <CardContent>
+                  {tabIndex === 0 && (
+                    <CardContent
+                      sx={{
+                        p: { xs: 0, sm: 0, md: 4 },
+                        overflowX: "hidden",
+                        width: "100%",
+                      }}
+                    >
                       <Typography
                         variant="h4"
                         component="h1"
@@ -450,14 +398,7 @@ const StylistDetailPage = () => {
                         </Typography>
                         <Grid container spacing={2}>
                           {selectedStylist?.services?.map((service, index) => (
-                            <Grid
-                              item
-                              xs={12}
-                              sm={6}
-                              md={4} // Make the service cards responsive
-                              key={service.id}
-                              sx={{ cursor: "default" }}
-                            >
+                            <Grid key={service._id} sx={{ cursor: "default" }}>
                               <Card
                                 sx={{
                                   background:
@@ -495,11 +436,17 @@ const StylistDetailPage = () => {
                         </Grid>
                       </Box>
                     </CardContent>
-                  </CustomTabPanel>
+                  )}
 
                   {/* Calendar TAB */}
-                  <CustomTabPanel value={tabIndex} index={1}>
-                    <CardContent>
+                  {tabIndex === 1 && (
+                    <CardContent
+                      sx={{
+                        p: { xs: 0, sm: 0, md: 4 },
+                        overflowX: "hidden",
+                        width: "100%",
+                      }}
+                    >
                       <Typography
                         variant="h4"
                         component="h1"
@@ -513,7 +460,6 @@ const StylistDetailPage = () => {
                       </Typography>
                       <Grid container spacing={3}>
                         <Grid
-                          item
                           size={{
                             xs: 12,
                             sm: 12,
@@ -575,7 +521,6 @@ const StylistDetailPage = () => {
                           </Box>
                         </Grid>
                         <Grid
-                          item
                           size={{
                             xs: 12,
                             sm: 12,
@@ -593,8 +538,7 @@ const StylistDetailPage = () => {
                                 selectedStylist.availability.hours.start,
                                 selectedStylist.availability.hours.end
                               )?.map((time, index) => (
-                                <Grid item xs={4} sm={3} md={2} key={index}>
-                                  {" "}
+                                <Grid key={index}>
                                   <Button
                                     disabled={bookedSlots.includes(time)}
                                     variant={
@@ -631,7 +575,7 @@ const StylistDetailPage = () => {
                                 marginTop: "16px",
                               }}
                             >
-                              {loading ? (
+                              {bookingLoading ? (
                                 <CircularProgress size={24} />
                               ) : (
                                 "Boka tid"
@@ -641,11 +585,17 @@ const StylistDetailPage = () => {
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </CustomTabPanel>
+                  )}
 
                   {/* Reviews TAB */}
-                  <CustomTabPanel value={tabIndex} index={2}>
-                    <CardContent>
+                  {tabIndex === 2 && (
+                    <CardContent
+                      sx={{
+                        p: { xs: 0, sm: 0, md: 4 },
+                        overflowX: "hidden",
+                        width: "100%",
+                      }}
+                    >
                       <Typography
                         variant="h4"
                         component="h1"
@@ -665,7 +615,6 @@ const StylistDetailPage = () => {
                         sx={{ overflow: "hidden" }}
                       >
                         <Grid
-                          item
                           maxHeight={450}
                           size={{
                             xs: 12,
@@ -710,11 +659,9 @@ const StylistDetailPage = () => {
                                     {review.name}
                                   </Typography>
                                   <Rating
-                                    value={review.rating}
-                                    onChange={() => {}}
-                                    precision={0.1}
-                                    readOnly
-                                    size="small"
+                                    initialValue={review.rating}
+                                    size={18}
+                                    readonly
                                   />
                                 </Box>
                               </Box>
@@ -732,7 +679,6 @@ const StylistDetailPage = () => {
                           ))}
                         </Grid>
                         <Grid
-                          item
                           size={{
                             xs: 12,
                             sm: 12,
@@ -745,66 +691,80 @@ const StylistDetailPage = () => {
                             <Typography variant="subtitle1" gutterBottom>
                               Share your feedback
                             </Typography>
-                            <Rating
-                              value={ratings}
-                              onChange={(e, value) => setRatings(value)}
-                              precision={0.1}
-                              size="large"
-                              sx={{
-                                left: "-0.2rem",
+                            <TextField
+                              type="text"
+                              name="userName"
+                              value={ratingForm.userName}
+                              onChange={handleRatingFormChange}
+                              placeholder="Enter your name"
+                              required
+                              style={{
+                                marginBottom: 10,
+                                width: "80%",
                               }}
                             />
                           </Box>
-                          <form onSubmit={handleRate}>
-                            <Box>
-                              <TextField
-                                name="userName"
-                                id="userName"
-                                placeholder="Enter your name"
-                                required
-                                style={{
-                                  marginTop: 5,
-                                  marginBottom: 10,
-                                }}
-                              />
-                              <TextAreaStyle
-                                minRows={10}
-                                maxRows={10}
-                                id="userReview"
-                                name="review"
-                                placeholder="Enter your review here..."
-                                required
-                                className="textarea"
-                              />
-                            </Box>
-                            <Box>
-                              <StyledButton
-                                type="submit"
-                                variant="contained"
-                                // onClick={handleRate}
-                                disabled={!ratings}
-                                sx={{
-                                  width: { xs: "100%", sm: "25%" }, // Full width on small screens, 50% width on medium screens
-                                  marginTop: "16px",
-                                  textTransform: "capitalize",
-                                }}
-                              >
-                                {loading ? (
-                                  <CircularProgress size={24} />
-                                ) : (
-                                  "Rate"
-                                )}
-                              </StyledButton>
-                            </Box>
-                          </form>
+                          <Box>
+                            <TextAreaStyle
+                              minRows={8}
+                              name="userReview"
+                              placeholder="Enter your review here..."
+                              className="textarea"
+                              required
+                              value={ratingForm.userReview}
+                              onChange={handleRatingFormChange}
+                              style={{
+                                width: "80%",
+                              }}
+                            />
+                          </Box>
+                          <Box>
+                            <Rating
+                              transition
+                              allowFraction
+                              initialValue={ratingForm.rating}
+                              onClick={(value) =>
+                                setRatingForm((prev) => ({
+                                  ...prev,
+                                  rating: value,
+                                }))
+                              }
+                            />
+                          </Box>
+
+                          <Box>
+                            <StyledButton
+                              type="submit"
+                              variant="contained"
+                              onClick={handleRate}
+                              disabled={!ratingForm.rating}
+                              sx={{
+                                width: { xs: "100%", sm: "25%" }, // Full width on small screens, 50% width on medium screens
+                                marginTop: "16px",
+                                textTransform: "capitalize",
+                              }}
+                            >
+                              {ratingLoader ? (
+                                <CircularProgress size={24} />
+                              ) : (
+                                "Rate"
+                              )}
+                            </StyledButton>
+                          </Box>
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </CustomTabPanel>
+                  )}
 
                   {/* Photos */}
-                  <CustomTabPanel value={tabIndex} index={3}>
-                    <CardContent>
+                  {tabIndex === 3 && (
+                    <CardContent
+                      sx={{
+                        p: { xs: 0, sm: 0, md: 4 },
+                        overflowX: "hidden",
+                        width: "100%",
+                      }}
+                    >
                       <Typography
                         variant="h4"
                         component="h1"
@@ -818,17 +778,7 @@ const StylistDetailPage = () => {
                         Photos
                       </Typography>
                       <Grid container spacing={3} sx={{ maxHeight: "25rem" }}>
-                        <Grid
-                          item
-                          xs={12}
-                          sm={5}
-                          md={5}
-                          // sx={{
-                          //   display: "flex",
-                          //   flexWrap: "wrap",
-                          //   justifyContent: "space-between",
-                          // }}
-                        >
+                        <Grid>
                           {reviewImages.splice(0, 10).map((img, index) => (
                             <img
                               key={index}
@@ -845,85 +795,91 @@ const StylistDetailPage = () => {
                         </Grid>
                       </Grid>
                     </CardContent>
-                  </CustomTabPanel>
+                  )}
 
                   {/* Contact TAB */}
-                  <CustomTabPanel value={tabIndex} index={4}>
-                    <Typography
-                      variant="h4"
-                      component="h1"
-                      gutterBottom
+                  {tabIndex === 4 && (
+                    <CardContent
                       sx={{
-                        color: "#D4AF37",
-                        fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
+                        p: { xs: 0, sm: 0, md: 4 },
+                        overflowX: "hidden",
+                        width: "100%",
                       }}
                     >
-                      Location
-                    </Typography>
-                    <Grid container spacing={5}>
-                      <Grid
-                        item
-                        size={{
-                          xs: 12,
-                          sm: 12,
-                          md: 6,
-                          lg: 6,
-                          xl: 6,
+                      <Typography
+                        variant="h4"
+                        component="h1"
+                        gutterBottom
+                        sx={{
+                          color: "#D4AF37",
+                          fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
                         }}
-                        sx={{ display: "flex", justifyContent: "center" }}
                       >
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "auto",
-                            maxWidth: "500px",
-                            margin: 5,
+                        Location
+                      </Typography>
+                      <Grid container spacing={5}>
+                        <Grid
+                          size={{
+                            xs: 12,
+                            sm: 12,
+                            md: 6,
+                            lg: 6,
+                            xl: 6,
                           }}
+                          sx={{ display: "flex", justifyContent: "center" }}
                         >
-                          <img
-                            src={mapLocationImage}
-                            alt="map location"
+                          <div
                             style={{
                               width: "100%",
-                              objectFit: "contain",
-                              borderRadius: "15px",
-                              cursor: "pointer",
+                              height: "auto",
+                              maxWidth: "500px",
+                              margin: 5,
                             }}
-                          />
-                        </div>
+                          >
+                            <img
+                              src={mapLocationImage}
+                              alt="map location"
+                              style={{
+                                width: "100%",
+                                objectFit: "contain",
+                                borderRadius: "15px",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </div>
+                        </Grid>
+                        <Grid
+                          size={{
+                            xs: 12,
+                            sm: 12,
+                            md: 6,
+                            lg: 6,
+                            xl: 6,
+                          }}
+                          padding={2}
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ marginBottom: 1 }}
+                          >
+                            <strong>Adress:</strong> {selectedStylist?.location}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ marginBottom: 1 }}
+                          >
+                            <strong>Phone:</strong> {selectedStylist?.phone}
+                          </Typography>
+                          <Typography
+                            variant="subtitle1"
+                            sx={{ marginBottom: 1 }}
+                          >
+                            <strong>Email:</strong> {selectedStylist?.email}
+                          </Typography>
+                        </Grid>
                       </Grid>
-                      <Grid
-                        item
-                        size={{
-                          xs: 12,
-                          sm: 12,
-                          md: 6,
-                          lg: 6,
-                          xl: 6,
-                        }}
-                        padding={2}
-                      >
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ marginBottom: 1 }}
-                        >
-                          <strong>Adress:</strong> {selectedStylist?.location}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ marginBottom: 1 }}
-                        >
-                          <strong>Phone:</strong> {selectedStylist?.phone}
-                        </Typography>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{ marginBottom: 1 }}
-                        >
-                          <strong>Email:</strong> {selectedStylist?.email}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </CustomTabPanel>
+                    </CardContent>
+                  )}
                 </Box>
               </Box>
             </StyledCard>
