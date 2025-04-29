@@ -220,13 +220,13 @@ const StylistDetailPage = () => {
       getWeekdayIndex(name)
     );
 
-    const newAllowdDays = allowedDays.filter((item) => {
-      if (![1, 2].includes(item)) {
-        return item;
-      }
-    });
+    // const newAllowdDays = allowedDays.filter((item) => {
+    //   if (![1, 2].includes(item)) {
+    //     return item;
+    //   }
+    // });
 
-    return !newAllowdDays.includes(day);
+    return !allowedDays.includes(day);
   };
   const handleTimeSelect = (time) => {
     const [hours, minutes] = time.split(":").map(Number);
