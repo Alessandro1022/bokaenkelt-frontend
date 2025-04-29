@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import {
   AppBar,
@@ -7,8 +7,16 @@ import {
   Typography,
   Button,
   Container,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  useMediaQuery,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import MenuIcon from "@mui/icons-material/Menu";
+import { styled, useTheme } from "@mui/material/styles";
 import { useAuth } from "../contexts/AuthContext";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -17,11 +25,11 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
   borderBottom: "1px solid #D4AF37",
 }));
 
-const StyledToolbar = styled(Toolbar)({
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   padding: "0 16px",
-});
+}));
 
 const NavButton = styled(Button)(({ theme }) => ({
   color: "#D4AF37",
@@ -35,10 +43,35 @@ const NavButton = styled(Button)(({ theme }) => ({
 const Layout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate("/");
+  };
+
+  const menuItems = [
+    { text: "Boka tid", path: "/stylists" },
+    ...(user
+      ? user.role === "admin"
+        ? [{ text: "Admin", path: "/admin/dashboard" }]
+        : [{ text: "Min Profil", path: "/customer/dashboard" }]
+      : [
+          { text: "Kund Login", path: "/customer/login" },
+          { text: "Admin Login", path: "/admin/login" },
+        ]),
+    ...(user ? [{ text: "Logga ut", action: handleLogout }] : []),
+  ];
+
+  const handleMenuClick = (item) => {
+    setDrawerOpen(false);
+    if (item.path) {
+      navigate(item.path);
+    } else if (item.action) {
+      item.action();
+    }
   };
 
   return (
@@ -50,36 +83,52 @@ const Layout = () => {
               BokaEnkelt
             </Typography>
           </NavButton>
-          <Box>
-            <NavButton onClick={() => navigate("/stylists")}>
-              Boka tid
-            </NavButton>
-            {user ? (
-              <>
-                {user.role === "admin" ? (
-                  <NavButton onClick={() => navigate("/admin/dashboard")}>
-                    Admin
-                  </NavButton>
-                ) : (
-                  <NavButton onClick={() => navigate("/customer/dashboard")}>
-                    Min Profil
-                  </NavButton>
-                )}
-                <NavButton onClick={handleLogout}>Logga ut</NavButton>
-              </>
-            ) : (
-              <>
-                <NavButton onClick={() => navigate("/customer/login")}>
-                  Kund Login
+
+          {isMobile ? (
+            <>
+              <IconButton
+                onClick={() => setDrawerOpen(true)}
+                sx={{ color: "#D4AF37" }}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Drawer
+                anchor="right"
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+              >
+                <Box sx={{ width: 250 }} role="presentation">
+                  <List>
+                    {menuItems.map((item, index) => (
+                      <ListItem
+                        button
+                        key={index}
+                        onClick={() => handleMenuClick(item)}
+                      >
+                        <ListItemText primary={item.text} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Box>
+              </Drawer>
+            </>
+          ) : (
+            <Box>
+              {menuItems.map((item, index) => (
+                <NavButton
+                  key={index}
+                  onClick={() =>
+                    item.path ? navigate(item.path) : item.action?.()
+                  }
+                >
+                  {item.text}
                 </NavButton>
-                <NavButton onClick={() => navigate("/admin/login")}>
-                  Admin Login
-                </NavButton>
-              </>
-            )}
-          </Box>
+              ))}
+            </Box>
+          )}
         </StyledToolbar>
       </StyledAppBar>
+
       <Container maxWidth="lg" sx={{ flex: 1, py: 4 }}>
         <Outlet />
       </Container>

@@ -26,6 +26,9 @@ import { createBookings, createGuestBookings } from "../api/bookings";
 // Styled components
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(2),
+  },
   background: "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
   border: "1px solid #D4AF37",
   borderRadius: 16,
@@ -63,7 +66,12 @@ const StyledButton = styled(Button)(({ theme }) => ({
   background: "linear-gradient(45deg, #D4AF37 30%, #B38B2D 90%)",
   boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
   color: "#FFFFFF",
-  padding: "10px 24px",
+  padding: theme.spacing(1.5, 3),
+  fontSize: "1rem",
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(1, 2),
+    fontSize: "0.9rem",
+  },
   "&:hover": {
     background: "linear-gradient(45deg, #B38B2D 30%, #D4AF37 90%)",
   },
@@ -178,11 +186,6 @@ const BookingForm = () => {
       }
 
       if (res.status === 201) {
-        // // Spara bokningen i localStorage
-        // const bookings = JSON.parse(localStorage.getItem("bookings") || "[]");
-        // bookings.push(newBooking);
-        // localStorage.setItem("bookings", JSON.stringify(bookings));
-        // // Navigera till bekräftelsesidan
         navigate("/booking-confirmation", { state: { booking: newBooking } });
       } else {
         setError("Ett fel uppstod vid bokningen. Vänligen försök igen.");
@@ -198,7 +201,14 @@ const BookingForm = () => {
         <Container maxWidth="md">
           <Box sx={{ py: 8 }}>
             <StyledPaper>
-              <StyledTypography variant="h4" component="h1" gutterBottom>
+              <StyledTypography
+                variant="h4"
+                component="h1"
+                gutterBottom
+                sx={{
+                  fontSize: { xs: "1.8rem", sm: "2.2rem" },
+                }}
+              >
                 Boka tid hos {user?.name || "vår frisör"}
               </StyledTypography>
 
@@ -236,7 +246,7 @@ const BookingForm = () => {
                       disabled={isLoggedIn}
                     />
                   </Grid>
-                  <Grid item xs={12} sx={{ minWidth: "30%", maxWidth: "30%" }}>
+                  <Grid item xs={12} sm={6}>
                     <StyledTextField
                       fullWidth
                       select
@@ -324,7 +334,18 @@ const BookingForm = () => {
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} noValidate>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={(theme) => ({
+              width: "100%",
+              mt: 2,
+              [theme.breakpoints.down("sm")]: {
+                mt: 1,
+              },
+            })}
+          >
             {/* Visar den valda tiden */}
             <Box
               sx={{ mb: 3, p: 2, border: "1px solid #D4AF37", borderRadius: 1 }}

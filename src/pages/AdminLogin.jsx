@@ -22,6 +22,10 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: "0 4px 8px rgba(212, 175, 55, 0.15)",
   maxWidth: 500,
   margin: "0 auto",
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(3),
+    margin: theme.spacing(2),
+  },
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -29,15 +33,24 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
   color: "#D4AF37",
   marginBottom: theme.spacing(3),
   textAlign: "center",
+  fontSize: "2rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "1.5rem",
+  },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
   background: "linear-gradient(45deg, #D4AF37 30%, #B38B2D 90%)",
   boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
   color: "#FFFFFF",
-  padding: "10px 24px",
+  padding: "12px 24px",
   width: "100%",
   marginTop: theme.spacing(2),
+  fontSize: "1rem",
+  [theme.breakpoints.down("sm")]: {
+    padding: "10px 20px",
+    fontSize: "0.9rem",
+  },
   "&:hover": {
     background: "linear-gradient(45deg, #B38B2D 30%, #D4AF37 90%)",
   },
@@ -67,7 +80,6 @@ const AdminLogin = () => {
     setError(null);
 
     try {
-      // Mock login for demonstration
       const res = await loginUser(formData);
       if (res.data.token.length > 0 && res.data.user.id.length > 0) {
         await login({
@@ -80,18 +92,6 @@ const AdminLogin = () => {
       } else {
         throw new Error("Felaktig e-post eller lösenord");
       }
-      // if (formData.email === 'admin@wolly.se' && formData.password === 'admin123') {
-      //   const userData = {
-      //     email: formData.email,
-      //     role: 'admin',
-      //     name: 'Admin',
-      //     id: '1'
-      //   };
-      //   await login(userData);
-      //   navigate('/admin');
-      // } else {
-      //   throw new Error('Felaktig e-post eller lösenord');
-      // }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -101,7 +101,7 @@ const AdminLogin = () => {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ py: 8 }}>
+      <Box sx={{ py: { xs: 6, sm: 8 } }}>
         <StyledPaper>
           <StyledTypography variant="h4">Admin Login</StyledTypography>
 
@@ -121,6 +121,7 @@ const AdminLogin = () => {
               onChange={handleInputChange}
               required
               sx={{ mb: 2 }}
+              size="medium"
             />
             <TextField
               fullWidth
@@ -131,9 +132,14 @@ const AdminLogin = () => {
               onChange={handleInputChange}
               required
               sx={{ mb: 2 }}
+              size="medium"
             />
             <StyledButton type="submit" variant="contained" disabled={loading}>
-              {loading ? <CircularProgress size={24} /> : "Logga in"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Logga in"
+              )}
             </StyledButton>
           </form>
         </StyledPaper>

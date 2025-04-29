@@ -272,7 +272,7 @@ const CustomerDashboard = () => {
           </StyledButton>
         </Box>
 
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
@@ -319,33 +319,69 @@ const CustomerDashboard = () => {
               </CardContent>
             </Card>
           </Grid>
+        </Grid> */}
+
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          {[
+            { label: "Totalt antal bokningar", value: stats.totalBookings },
+            { label: "Bekräftade bokningar", value: stats.confirmedBookings },
+            { label: "Väntande bokningar", value: stats.pendingBookings },
+            { label: "Avbokade bokningar", value: stats.cancelledBookings },
+          ].map((stat, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Card sx={{ height: "100%" }}>
+                <CardContent>
+                  <Typography color="textSecondary" gutterBottom>
+                    {stat.label}
+                  </Typography>
+                  <Typography variant="h4">{stat.value}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
 
         <StyledPaper>
-          <TableContainer>
+          <TableContainer sx={{ maxHeight: 400, overflow: "auto" }}>
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Datum</TableCell>
-                  <TableCell>Tid</TableCell>
-                  <TableCell>Tjänst</TableCell>
-                  <TableCell>Status</TableCell>
-                  <TableCell>Åtgärder</TableCell>
+                  <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                    Datum
+                  </TableCell>
+                  <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                    Tid
+                  </TableCell>
+                  <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                    Tjänst
+                  </TableCell>
+                  <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                    Status
+                  </TableCell>
+                  <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                    Åtgärder
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {bookings.map((booking) => (
                   <TableRow key={booking.id || booking._id}>
-                    <TableCell>{formatDate(booking.date)}</TableCell>
-                    <TableCell>{formatTime(booking.time)}</TableCell>
-                    <TableCell>{booking.service}</TableCell>
-                    <TableCell>
+                    <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                      {formatDate(booking.date)}
+                    </TableCell>
+                    <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                      {formatTime(booking.time)}
+                    </TableCell>
+                    <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
+                      {booking.service}
+                    </TableCell>
+                    <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
                       <Chip
                         label={getStatusLabel(booking.status)}
                         color={getStatusColor(booking.status)}
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ fontSize: { xs: "0.8rem", sm: "1rem" } }}>
                       <IconButton onClick={() => handleEdit(booking)}>
                         <EditIcon />
                       </IconButton>
@@ -365,7 +401,16 @@ const CustomerDashboard = () => {
           </TableContainer>
         </StyledPaper>
 
-        <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+        <Dialog
+          open={editDialogOpen}
+          onClose={() => setEditDialogOpen(false)}
+          sx={{
+            "& .MuiDialog-paper": {
+              width: { xs: "90%", sm: "500px" }, // Adjust width based on screen size
+              maxWidth: "500px", // Optional: Cap the max width on larger screens
+            },
+          }}
+        >
           <DialogTitle>Redigera bokning</DialogTitle>
           <DialogContent>
             <Box sx={{ pt: 2 }}>

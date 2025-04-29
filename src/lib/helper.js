@@ -32,3 +32,17 @@ export function generateHourlySlots(start, end) {
 
     return slots;
 }
+
+export function convertEnglishToSwedish(englishDay) {
+    const dayMap = {
+        Monday: "Måndag",
+        Tuesday: "Tisdag",
+        Wednesday: "Onsdag",
+        Thursday: "Torsdag",
+        Friday: "Fredag",
+        Saturday: "Lördag",
+        Sunday: "Söndag",
+    };
+
+    return dayMap[englishDay] || englishDay; // If not found, return the original
+}

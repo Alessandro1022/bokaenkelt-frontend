@@ -18,8 +18,6 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Chip,
-  Divider,
   Grid,
   Card,
   CardContent,
@@ -173,10 +171,6 @@ const AdminDashboard = () => {
         await loadBookings();
         showNotification("Bokning borttagen", "success");
       }
-      // const updatedBookings = bookings.filter((booking) => booking.id !== id);
-      // localStorage.setItem("bookings", JSON.stringify(updatedBookings));
-      // setBookings(updatedBookings);
-      // showNotification("Bokning borttagen");
     } catch (err) {
       setError("Kunde inte ta bort bokningen");
       console.error("Error deleting booking:", err);
@@ -191,15 +185,6 @@ const AdminDashboard = () => {
         setEditingBooking(null);
         showNotification("Bokning uppdaterad", "success");
       }
-      // const updatedBookings = bookings.map((booking) =>
-      //   booking.id === editingBooking.id
-      //     ? { ...booking, ...editFormData }
-      //     : booking
-      // );
-      // localStorage.setItem("bookings", JSON.stringify(updatedBookings));
-      // setBookings(updatedBookings);
-      // setEditingBooking(null);
-      // showNotification("Bokning uppdaterad");
     } catch (err) {
       setError("Kunde inte uppdatera bokningen");
       console.error("Error updating booking:", err);
@@ -219,19 +204,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "confirmed":
-        return "Bekräftad";
-      case "pending":
-        return "Väntar";
-      case "cancelled":
-        return "Avbokad";
-      default:
-        return status;
-    }
-  };
-
   const formatDate = (dateString) => {
     try {
       const date = new Date(dateString);
@@ -247,11 +219,9 @@ const AdminDashboard = () => {
   const formatTime = (timeString) => {
     try {
       if (!timeString) return "Ingen tid angiven";
-      // Kontrollera om tiden redan är i rätt format (HH:mm)
       if (/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(timeString)) {
         return timeString;
       }
-      // Om tiden är i ISO-format, extrahera bara HH:mm
       const time = new Date(timeString);
       if (isNaN(time.getTime())) {
         return "Ogiltig tid";
@@ -324,19 +294,30 @@ const AdminDashboard = () => {
             mb: 4,
           }}
         >
-          <StyledTypography variant="h4">
+          <StyledTypography
+            variant="h4"
+            sx={{
+              fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
+              fontFamily: "Playfair Display, serif",
+              color: "#D4AF37",
+              mb: 3,
+            }}
+          >
             BokaEnkelt - Admin Panel
           </StyledTypography>
           <StyledButton
             variant="contained"
             onClick={handleLogout}
             startIcon={<LogoutIcon />}
+            sx={{
+              display: { xs: "none", sm: "none", md: "inline-flex" }, // Hidden on xs and sm, visible on md+
+            }}
           >
             Logga ut
           </StyledButton>
         </Box>
 
-        <Grid container spacing={3} sx={{ mb: 4 }}>
+        {/* <Grid container spacing={3} sx={{ mb: 4 }}>
           <Grid item xs={12} sm={6} md={3}>
             <Card>
               <CardContent>
@@ -383,11 +364,30 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           </Grid>
+        </Grid> */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
+          {[
+            { label: "Totalt antal bokningar", value: stats.totalBookings },
+            { label: "Bekräftade bokningar", value: stats.confirmedBookings },
+            { label: "Väntande bokningar", value: stats.pendingBookings },
+            { label: "Avbokade bokningar", value: stats.cancelledBookings },
+          ].map((stat, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <Card sx={{ height: "100%" }}>
+                <CardContent>
+                  <Typography color="textSecondary" gutterBottom>
+                    {stat.label}
+                  </Typography>
+                  <Typography variant="h4">{stat.value}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
 
         <StyledPaper>
-          <TableContainer>
-            <Table>
+          <TableContainer sx={{ overflowX: "auto" }}>
+            <Table sx={{ minWidth: 650 }}>
               <TableHead>
                 <TableRow>
                   <TableCell>Kund</TableCell>
@@ -444,7 +444,7 @@ const AdminDashboard = () => {
         <Dialog open={!!editingBooking} onClose={() => setEditingBooking(null)}>
           <DialogTitle>Redigera Bokning</DialogTitle>
           <DialogContent>
-            <Box sx={{ pt: 2 }}>
+            <Box sx={{ width: { xs: "100%", sm: "500px" } }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField

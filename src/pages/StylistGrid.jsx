@@ -40,14 +40,16 @@ const StylistGrid = () => {
 
   useEffect(() => {
     fetchStylists();
-  }, []);
+  }, [fetchStylists]);
 
   const handleSearch = useCallback((event) => {
     setSearchTerm(event.target?.value?.toLowerCase());
   }, []);
+
   const handleStylistClick = (stylist) => {
     navigate(`/stylist/${stylist?._id}`, { state: stylist });
   };
+
   const filteredStylists = stylists.filter(
     (stylist) =>
       stylist?.name?.toLowerCase()?.includes(searchTerm) ||
@@ -104,14 +106,25 @@ const StylistGrid = () => {
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
+                cursor: "pointer",
+                mx: "auto", // Center horizontally
+                width: {
+                  xs: "250px", // Full width on mobile
+                  sm: "350px", // Slight padding on small screens
+                  md: "400px", // Tighter on medium screens
+                  lg: "400px", // Fixed width on large screens
+                },
+                maxWidth: "400px",
+                minWidth: {
+                  xs: "250px", // Flexible for mobile
+                  sm: "350px", // Reasonable minimum for tablet
+                  lg: "400px", // Enforced fixed on large
+                },
                 "&:hover": {
                   transform: "translateY(-4px)",
                   boxShadow: 4,
                   transition: "all 0.3s ease-in-out",
                 },
-                cursor: "pointer",
-                minWidth: "400px",
-                maxWidth: "400px",
               }}
               onClick={() => handleStylistClick(stylist)}
             >
@@ -124,7 +137,7 @@ const StylistGrid = () => {
                   sx={{ objectFit: "cover" }}
                 />
                 <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography gutterBottom variant="h5" component="h2">
+                  <Typography gutterBottom variant="h6" component="h2">
                     {stylist.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" paragraph>
@@ -136,9 +149,6 @@ const StylistGrid = () => {
                   <Typography variant="body2" color="text.secondary">
                     Experience: {stylist.experience} years
                   </Typography>
-                  {/* <Typography variant="body2" color="text.secondary">
-                    Rating: {stylist.rating.toFixed(1)} / 5.0
-                  </Typography> */}
                 </CardContent>
               </CardActionArea>
             </Card>

@@ -8,14 +8,10 @@ import {
   Button,
   Grid,
   Alert,
-  Rating,
-  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { format, parse } from "date-fns";
 import sv from "date-fns/locale/sv";
-import { useAuth } from "../contexts/AuthContext";
-import { createGuestRating, createRatings } from "../api/ratings";
 
 // Styled components
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -24,12 +20,18 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   border: "1px solid #D4AF37",
   borderRadius: 16,
   boxShadow: "0 4px 8px rgba(212, 175, 55, 0.15)",
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(2),
+  },
 }));
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
   fontFamily: "Playfair Display, serif",
   color: "#D4AF37",
   marginBottom: theme.spacing(2),
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "1.5rem",
+  },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -37,6 +39,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
   boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
   color: "#FFFFFF",
   padding: "10px 24px",
+  width: "100%",
+  maxWidth: "250px",
   "&:hover": {
     background: "linear-gradient(45deg, #B38B2D 30%, #D4AF37 90%)",
   },
@@ -45,13 +49,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
 
-  // STATES
   const [ratings, setRatings] = useState(0);
   const [booking, setBooking] = useState(null);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (location.state?.booking) {
@@ -64,11 +65,10 @@ const BookingConfirmation = () => {
   const formatDate = (dateString) => {
     try {
       const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return "Ogiltigt datum";
-      }
-      return format(date, "EEEE d MMMM yyyy", { locale: sv });
-    } catch (error) {
+      return isNaN(date.getTime())
+        ? "Ogiltigt datum"
+        : format(date, "EEEE d MMMM yyyy", { locale: sv });
+    } catch {
       return "Ogiltigt datum";
     }
   };
@@ -76,24 +76,13 @@ const BookingConfirmation = () => {
   const formatTime = (timeString) => {
     try {
       if (!timeString) return "Ingen tid angiven";
-
-      // Om tid är i HH:mm format
-      if (timeString.includes(":")) {
-        return timeString;
-      }
-
-      // Om tid är ett Date-objekt
-      if (timeString instanceof Date) {
-        return format(timeString, "HH:mm");
-      }
-
-      // Försök parsa tid från olika format
+      if (timeString.includes(":")) return timeString;
+      if (timeString instanceof Date) return format(timeString, "HH:mm");
       const parsedTime = parse(timeString, "HH:mm", new Date());
-      if (isNaN(parsedTime.getTime())) {
-        return "Ogiltig tid";
-      }
-      return format(parsedTime, "HH:mm");
-    } catch (error) {
+      return isNaN(parsedTime.getTime())
+        ? "Ogiltig tid"
+        : format(parsedTime, "HH:mm");
+    } catch {
       return "Ogiltig tid";
     }
   };
@@ -126,14 +115,16 @@ const BookingConfirmation = () => {
 
   if (error) {
     return (
-      <Container maxWidth="md">
-        <Box sx={{ py: 8 }}>
+      <Container maxWidth="sm">
+        <Box sx={{ py: { xs: 4, md: 8 } }}>
           <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
-          <StyledButton variant="contained" onClick={() => navigate("/")}>
-            Tillbaka till startsidan
-          </StyledButton>
+          <Box display="flex" justifyContent="center">
+            <StyledButton variant="contained" onClick={() => navigate("/")}>
+              Tillbaka till startsidan
+            </StyledButton>
+          </Box>
         </Box>
       </Container>
     );
@@ -141,8 +132,8 @@ const BookingConfirmation = () => {
 
   if (!booking) {
     return (
-      <Container maxWidth="md">
-        <Box sx={{ py: 8 }}>
+      <Container maxWidth="sm">
+        <Box sx={{ py: { xs: 4, md: 8 } }}>
           <Alert severity="info" sx={{ mb: 2 }}>
             Laddar bokningsinformation...
           </Alert>
@@ -153,7 +144,7 @@ const BookingConfirmation = () => {
 
   return (
     <Container maxWidth="md">
-      <Box sx={{ py: 8 }}>
+      <Box sx={{ py: { xs: 4, md: 8 } }}>
         <StyledPaper>
           <StyledTypography
             variant="h4"
@@ -201,16 +192,11 @@ const BookingConfirmation = () => {
               <Box
                 sx={{
                   mt: 3,
-                  gap: 5,
                   display: "flex",
                   justifyContent: "center",
                 }}
               >
-                <StyledButton
-                  variant="contained"
-                  onClick={handleSubmit}
-                  style={{ width: "15rem" }}
-                >
+                <StyledButton variant="contained" onClick={handleSubmit}>
                   Tillbaka till startsidan
                 </StyledButton>
               </Box>
