@@ -97,7 +97,12 @@ const Layout = () => {
                 open={drawerOpen}
                 onClose={() => setDrawerOpen(false)}
               >
-                <Box sx={{ width: 250 }} role="presentation">
+                <Box
+                  sx={{ width: 250 }}
+                  role="presentation"
+                  height="100%"
+                  bgcolor="#fffefa"
+                >
                   <List>
                     {menuItems.map((item, index) => (
                       <ListItem
@@ -105,7 +110,10 @@ const Layout = () => {
                         key={index}
                         onClick={() => handleMenuClick(item)}
                       >
-                        <ListItemText primary={item.text} />
+                        <ListItemText
+                          primary={item.text}
+                          style={{ color: "#e2b937" }}
+                        />
                       </ListItem>
                     ))}
                   </List>
