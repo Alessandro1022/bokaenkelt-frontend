@@ -17,6 +17,8 @@ import {
   Tabs,
   Tab,
   Avatar,
+  TextField,
+  TextareaAutosize,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
@@ -28,10 +30,15 @@ import {
   generateHourlySlots,
   getNextDate,
 } from "../lib/helper";
-import { createGuestRating, createRatings } from "../api/ratings";
+import {
+  createGuestRating,
+  createRatings,
+  getStylistRatings,
+} from "../api/ratings";
 import { useAuth } from "../contexts/AuthContext";
 import { getBookedTimeSlots } from "../api/bookings";
 import mapLocationImage from "../assets/map_location.png";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
@@ -45,7 +52,6 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     marginTop: theme.spacing(2), // Adjust margin for small screens
   },
 }));
-
 const StyledButton = styled(Button)(({ theme }) => ({
   background: "linear-gradient(45deg, #D4AF37 30%, #B38B2D 90%)",
   boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
@@ -58,7 +64,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
     padding: "8px 16px", // Adjust padding for smaller screens
   },
 }));
-
 const StyledCard = styled(Card)(({ theme }) => ({
   height: "100%",
   display: "flex",
@@ -71,13 +76,26 @@ const StyledCard = styled(Card)(({ theme }) => ({
     margin: theme.spacing(2), // Adjust margins for smaller screens
   },
 }));
-
 const StyledCardMedia = styled(CardMedia)(({ theme }) => ({
   height: 400,
   backgroundSize: "cover",
   backgroundPosition: "center",
   [theme.breakpoints.down("sm")]: {
     height: 250, // Adjust media height on smaller screens
+  },
+}));
+const TextAreaStyle = styled(TextareaAutosize)(({ theme }) => ({
+  background: "transparent",
+  borderRadius: 5,
+  borderColor: "#888",
+  outline: "none",
+  width: "100%",
+  padding: 10,
+  "&:hover": {
+    borderColor: "black",
+  },
+  "&:focus": {
+    borderColor: "#d4af37",
   },
 }));
 
@@ -100,6 +118,7 @@ const StylistDetailPage = () => {
   const _tabIndex = tabList?.findIndex(
     (item) => item === selectedStylist?.tabs?.[0]
   );
+  const [userReviews, setUserReviews] = useState([]);
   const [tabIndex, setTabIndex] = useState(_tabIndex);
   const [value, setValue] = React.useState(0);
 
@@ -135,11 +154,30 @@ const StylistDetailPage = () => {
       description:
         "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
     },
+    {
+      name: "Sofia Hernandez",
+      rating: 4.8,
+      description:
+        "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
+    },
+    {
+      name: "Sofia Hernandez",
+      rating: 4.8,
+      description:
+        "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
+    },
+    {
+      name: "Sofia Hernandez",
+      rating: 4.8,
+      description:
+        "I had a facial done by Meera and it was heavenly. My skin feels refreshed and glowing. Highly recommend her!",
+    },
   ];
 
   // EFFECTS
   useEffect(() => {
     fetchBookedSlots();
+    fetchStylistRatings();
   }, []);
 
   // FUNCTIONS
@@ -154,6 +192,16 @@ const StylistDetailPage = () => {
       const bookedSlots = await getBookedTimeSlots(_data);
       if (bookedSlots.status === 200) {
         setBookedSlots(bookedSlots?.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const fetchStylistRatings = async () => {
+    try {
+      const res = await getStylistRatings(stylistId);
+      if (res.status === 200) {
+        setUserReviews(res.data.data);
       }
     } catch (error) {
       console.error(error);
@@ -246,6 +294,29 @@ const StylistDetailPage = () => {
     if (tabName === "Reviews") return setTabIndex(2);
     if (tabName === "Photos") return setTabIndex(3);
     if (tabName === "Contact") return setTabIndex(4);
+  };
+  const handleRate = async (e) => {
+    try {
+      e.preventDefault();
+      const userName = document.getElementById("userName").value;
+      const userReview = document.getElementById("userReview").value;
+      const _data = {
+        rating: ratings,
+        stylist: stylistId,
+        name: userName,
+        review: userReview,
+      };
+      const res = await createRatings(_data);
+
+      if (res.status === 200) {
+        document.getElementById("userName").value = "";
+        document.getElementById("userReview").value = "";
+        setRatings(0);
+        fetchStylistRatings();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   function CustomTabPanel(props) {
@@ -445,9 +516,13 @@ const StylistDetailPage = () => {
                       <Grid container spacing={3}>
                         <Grid
                           item
-                          xs={12} // Full width on small screens
-                          sm={6} // Half width on medium screens
-                          lg={6} // Half width on large screens
+                          size={{
+                            xs: 12,
+                            sm: 12,
+                            md: 6,
+                            lg: 6,
+                            xl: 6,
+                          }}
                           sx={{
                             display: "flex",
                             justifyContent: "center",
@@ -455,46 +530,63 @@ const StylistDetailPage = () => {
                             alignItems: "center",
                           }}
                         >
-                          {error && (
-                            <Alert
-                              severity="error"
-                              sx={{ mb: 2, width: "100%" }}
-                            >
-                              {error}
-                            </Alert>
-                          )}
-                          <LocalizationProvider
-                            dateAdapter={AdapterDateFns}
-                            adapterLocale={sv}
-                          >
-                            <DateCalendar
-                              value={selectedDate}
-                              onChange={handleDateChange}
-                              minDate={getNextDate()}
-                              sx={{
-                                "& .Mui-selected": {
-                                  backgroundColor: "#D4AF37 !important",
-                                },
-                                "& .MuiPickersDay-dayWithMargin": {
-                                  "&:hover": {
-                                    backgroundColor: "rgba(212, 175, 55, 0.1)",
+                          <Box width="100%">
+                            {error && (
+                              <Alert
+                                severity="error"
+                                sx={{
+                                  width: {
+                                    xs: "100%",
+                                    sm: "100%",
+                                    md: "70%",
+                                    lg: "70%",
                                   },
-                                },
-                                "& .MuiPickersDay-today": {
-                                  border: "none !important",
-                                },
-                                width: "100%", // Make the calendar full width
-                              }}
-                            />
-                          </LocalizationProvider>
+                                }}
+                              >
+                                {error}
+                              </Alert>
+                            )}
+                            <LocalizationProvider
+                              dateAdapter={AdapterDateFns}
+                              adapterLocale={sv}
+                            >
+                              <DateCalendar
+                                value={selectedDate}
+                                onChange={handleDateChange}
+                                minDate={getNextDate()}
+                                sx={{
+                                  "& .Mui-selected": {
+                                    backgroundColor: "#D4AF37 !important",
+                                  },
+                                  "& .MuiPickersDay-dayWithMargin": {
+                                    "&:hover": {
+                                      backgroundColor:
+                                        "rgba(212, 175, 55, 0.1)",
+                                    },
+                                  },
+                                  "& .MuiPickersDay-today": {
+                                    border: "none !important",
+                                  },
+                                  width: {
+                                    xs: "100%",
+                                    sm: "100%",
+                                  },
+                                }}
+                              />
+                            </LocalizationProvider>
+                          </Box>
                         </Grid>
                         <Grid
                           item
-                          xs={12} // Full width on small screens
-                          sm={6} // Half width on medium screens
-                          lg={6} // Half width on large screens
+                          size={{
+                            xs: 12,
+                            sm: 12,
+                            md: 6,
+                            lg: 6,
+                            xl: 6,
+                          }}
                         >
-                          <Box sx={{ mt: 2 }}>
+                          <Box>
                             <Typography variant="subtitle1" gutterBottom>
                               Tillgängliga tider:
                             </Typography>
@@ -530,20 +622,6 @@ const StylistDetailPage = () => {
                                 </Grid>
                               ))}
                             </Grid>
-                          </Box>
-                          <Box sx={{ mt: 2 }}>
-                            <Typography variant="subtitle1" gutterBottom>
-                              Share your feedback
-                            </Typography>
-                            <Rating
-                              value={ratings}
-                              onChange={(e, value) => setRatings(value)}
-                              precision={0.1}
-                              size="large"
-                              sx={{
-                                left: "-0.2rem",
-                              }}
-                            />
                           </Box>
                           <Box sx={{ mt: 2 }}>
                             <StyledButton
@@ -582,11 +660,41 @@ const StylistDetailPage = () => {
                       >
                         Reviews
                       </Typography>
-                      <Grid container spacing={3} sx={{ maxHeight: "25rem" }}>
-                        <Grid item xs={12} sm={7} md={7}>
-                          {" "}
-                          {/* Adjust size based on device */}
-                          {reviews.map((review, index) => (
+                      <Grid
+                        direction="row"
+                        container
+                        spacing={3}
+                        sx={{ overflow: "hidden" }}
+                      >
+                        <Grid
+                          item
+                          maxHeight={450}
+                          size={{
+                            xs: 12,
+                            sm: 12,
+                            md: 6,
+                            lg: 6,
+                            xl: 6,
+                          }}
+                          style={{ overflowX: "auto" }}
+                        >
+                          {!userReviews.length && (
+                            <Typography
+                              component="p"
+                              gutterBottom
+                              sx={{
+                                fontSize: {
+                                  xs: "1.5rem",
+                                  sm: "1.5rem",
+                                  md: "1.5rem",
+                                },
+                                mb: 2,
+                              }}
+                            >
+                              No Reviews
+                            </Typography>
+                          )}
+                          {userReviews.map((review, index) => (
                             <Box key={index} mb={3}>
                               <Box display="flex" alignItems="center">
                                 <Avatar src="" sx={{ marginRight: 2 }} />
@@ -619,11 +727,78 @@ const StylistDetailPage = () => {
                                   gutterBottom
                                   sx={{ maxWidth: "95%" }}
                                 >
-                                  {review.description}
+                                  {review.review}
                                 </Typography>
                               </Box>
                             </Box>
                           ))}
+                        </Grid>
+                        <Grid
+                          item
+                          size={{
+                            xs: 12,
+                            sm: 12,
+                            md: 6,
+                            lg: 6,
+                            xl: 6,
+                          }}
+                        >
+                          <Box>
+                            <Typography variant="subtitle1" gutterBottom>
+                              Share your feedback
+                            </Typography>
+                            <Rating
+                              value={ratings}
+                              onChange={(e, value) => setRatings(value)}
+                              precision={0.1}
+                              size="large"
+                              sx={{
+                                left: "-0.2rem",
+                              }}
+                            />
+                          </Box>
+                          <form onSubmit={handleRate}>
+                            <Box>
+                              <TextField
+                                name="userName"
+                                id="userName"
+                                placeholder="Enter your name"
+                                required
+                                style={{
+                                  marginTop: 5,
+                                  marginBottom: 10,
+                                }}
+                              />
+                              <TextAreaStyle
+                                minRows={10}
+                                maxRows={10}
+                                id="userReview"
+                                name="review"
+                                placeholder="Enter your review here..."
+                                required
+                                className="textarea"
+                              />
+                            </Box>
+                            <Box>
+                              <StyledButton
+                                type="submit"
+                                variant="contained"
+                                // onClick={handleRate}
+                                disabled={!ratings}
+                                sx={{
+                                  width: { xs: "100%", sm: "25%" }, // Full width on small screens, 50% width on medium screens
+                                  marginTop: "16px",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                {loading ? (
+                                  <CircularProgress size={24} />
+                                ) : (
+                                  "Rate"
+                                )}
+                              </StyledButton>
+                            </Box>
+                          </form>
                         </Grid>
                       </Grid>
                     </CardContent>
