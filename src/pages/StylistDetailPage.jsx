@@ -25,7 +25,10 @@ import { Rating } from "react-simple-star-rating";
 import { styled } from "@mui/material/styles";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import dayjs from "dayjs";
 import sv from "date-fns/locale/sv";
+
 import { API_BASE_URL } from "../lib/constants";
 import {
   convertEnglishToSwedish,
@@ -181,6 +184,7 @@ const StylistDetailPage = () => {
     const weekday = date.toLocaleDateString("en-US", {
       weekday: "long",
     });
+
     const selectedDayName = convertEnglishToSwedish(weekday);
 
     if (
@@ -189,8 +193,7 @@ const StylistDetailPage = () => {
       selectedDayName === "Tuesday" ||
       selectedDayName === "Torsdag"
     ) {
-      setError("Inga tider tillgängliga denna dag");
-      return;
+      return setError("Inga tider tillgängliga denna dag");
     }
 
     const isAvailable =
@@ -321,7 +324,7 @@ const StylistDetailPage = () => {
               </Tabs>
 
               {/* Info */}
-              {tabIndex === 0 && (
+              <CustomTabPanel value={tabIndex} index={0}>
                 <CardContent
                   sx={{
                     p: { xs: 0, sm: 0, md: 2 },
@@ -428,10 +431,10 @@ const StylistDetailPage = () => {
                     </Grid>
                   </Box>
                 </CardContent>
-              )}
+              </CustomTabPanel>
 
               {/* Calendar */}
-              {tabIndex === 1 && (
+              <CustomTabPanel value={tabIndex} index={1}>
                 <CardContent
                   sx={{
                     p: { xs: 0, sm: 0, md: 2 },
@@ -482,7 +485,35 @@ const StylistDetailPage = () => {
                             {error}
                           </Alert>
                         )}
-                        <LocalizationProvider
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                          <DemoContainer components={["DateCalendar"]}>
+                            <DateCalendar
+                              // referenceDate={dayjs("2022-04-17")}
+                              views={["year", "month", "day"]}
+                              value={selectedDate}
+                              onChange={handleDateChange}
+                              minDate={getNextDate()}
+                              sx={{
+                                "& .Mui-selected": {
+                                  backgroundColor: "#D4AF37 !important",
+                                },
+                                "& .MuiPickersDay-dayWithMargin": {
+                                  "&:hover": {
+                                    backgroundColor: "rgba(212, 175, 55, 0.1)",
+                                  },
+                                },
+                                "& .MuiPickersDay-today": {
+                                  border: "none !important",
+                                },
+                                // width: {
+                                //   xs: "100%",
+                                //   sm: "100%",
+                                // },
+                              }}
+                            />
+                          </DemoContainer>
+                        </LocalizationProvider>
+                        {/* <LocalizationProvider
                           dateAdapter={AdapterDateFns}
                           adapterLocale={sv}
                         >
@@ -508,7 +539,7 @@ const StylistDetailPage = () => {
                               },
                             }}
                           />
-                        </LocalizationProvider>
+                        </LocalizationProvider> */}
                       </Box>
                     </Grid>
                     <Grid
@@ -576,10 +607,10 @@ const StylistDetailPage = () => {
                     </Grid>
                   </Grid>
                 </CardContent>
-              )}
+              </CustomTabPanel>
 
               {/* Reviews */}
-              {tabIndex === 2 && (
+              <CustomTabPanel value={tabIndex} index={2}>
                 <CardContent
                   sx={{
                     p: { xs: 0, sm: 0, md: 2 },
@@ -745,10 +776,10 @@ const StylistDetailPage = () => {
                     </Grid>
                   </Grid>
                 </CardContent>
-              )}
+              </CustomTabPanel>
 
               {/* Photos */}
-              {tabIndex === 3 && (
+              <CustomTabPanel value={tabIndex} index={3}>
                 <CardContent
                   sx={{
                     p: { xs: 0, sm: 0, md: 2 },
@@ -786,10 +817,10 @@ const StylistDetailPage = () => {
                     </Grid>
                   </Grid>
                 </CardContent>
-              )}
+              </CustomTabPanel>
 
               {/* Contact */}
-              {tabIndex === 4 && (
+              <CustomTabPanel value={tabIndex} index={4}>
                 <CardContent
                   sx={{
                     p: { xs: 0, sm: 0, md: 2 },
@@ -861,7 +892,7 @@ const StylistDetailPage = () => {
                     </Grid>
                   </Grid>
                 </CardContent>
-              )}
+              </CustomTabPanel>
             </Box>
           </Grid>
         </Grid>
@@ -871,3 +902,19 @@ const StylistDetailPage = () => {
 };
 
 export default StylistDetailPage;
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
