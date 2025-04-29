@@ -43,8 +43,9 @@ import mapLocationImage from "../assets/map_location.png";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
+  // padding: theme.spacing(4),
   marginTop: theme.spacing(4),
+  overflow: "hidden",
   background: "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
   border: "1px solid #D4AF37",
   borderRadius: 16,
@@ -292,597 +293,576 @@ const StylistDetailPage = () => {
       <StyledPaper>
         <Grid container spacing={4}>
           <Grid width="100%">
-            <StyledCard>
-              <StyledCardMedia
-                image={`${API_BASE_URL}/${selectedStylist.imageUrl}`}
-                title={selectedStylist?.name}
-                sx={{
-                  height: { xs: 250, sm: 350, md: 400, lg: 400 },
-                  width: "100%",
-                }}
-              />
-              <Box>
-                <Box
+            <StyledCardMedia
+              image={`${API_BASE_URL}/${selectedStylist.imageUrl}`}
+              title={selectedStylist?.name}
+              sx={{
+                height: { xs: 250, sm: 350, md: 400, lg: 400 },
+                width: "100%",
+              }}
+            />
+            <Box>
+              <Tabs
+                value={value}
+                onChange={handleTabChange}
+                variant="scrollable"
+                scrollButtons="auto"
+                style={{ borderTop: "1px solid #d4af37" }}
+              >
+                {selectedStylist?.tabs?.map((tab, index) => {
+                  return (
+                    <Tab
+                      key={index}
+                      label={tab}
+                      style={{ textTransform: "capitalize" }}
+                    />
+                  );
+                })}
+              </Tabs>
+
+              {/* Info */}
+              {tabIndex === 0 && (
+                <CardContent
                   sx={{
-                    borderBottom: 1,
-                    borderColor: "divider",
+                    p: { xs: 0, sm: 0, md: 2 },
+                    overflowX: "hidden",
+                    width: "100%",
                   }}
                 >
-                  <Tabs
-                    value={value}
-                    onChange={handleTabChange}
-                    variant="scrollable"
-                    scrollButtons="auto"
+                  <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    sx={{
+                      color: "#D4AF37",
+                      fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }, // Responsive font size
+                      wordBreak: "break-word", // Break long words if needed
+                      whiteSpace: "normal", // Allow text to wrap normally
+                      overflowWrap: "break-word", // Safe break for long words
+                    }}
                   >
-                    {selectedStylist?.tabs?.map((tab, index) => {
-                      return (
-                        <Tab
-                          key={index}
-                          label={tab}
-                          style={{ textTransform: "capitalize" }}
-                        />
-                      );
-                    })}
-                  </Tabs>
+                    {selectedStylist?.name}
+                  </Typography>
 
-                  {/* Info TAB */}
-                  {tabIndex === 0 && (
-                    <CardContent
+                  <Typography variant="body1" mb={2}>
+                    {/* <strong>Bio:</strong> */}
+                    {selectedStylist?.bio}
+                  </Typography>
+                  <Typography variant="body1">
+                    <strong>Erfarenhet:</strong> {selectedStylist?.experience}
+                  </Typography>
+                  <Typography variant="body1">
+                    <strong>Tillgänglighet:</strong>{" "}
+                    {selectedStylist?.availability?.days?.join(", ")}{" "}
+                    {selectedStylist?.availability?.hours?.start + " "}-
+                    {" " + selectedStylist?.availability?.hours?.end}
+                  </Typography>
+                  <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap" }}>
+                    {selectedStylist?.specialties?.map((specialty, index) => (
+                      <Chip
+                        key={index}
+                        label={specialty}
+                        sx={{
+                          mr: 1,
+                          mb: 1,
+                          background: "#D4AF37",
+                          color: "#FFFFFF",
+                        }}
+                      />
+                    ))}
+                  </Box>
+
+                  <Box sx={{ mb: 4 }}>
+                    <Typography
+                      variant="h5"
+                      gutterBottom
                       sx={{
-                        p: { xs: 0, sm: 0, md: 4 },
-                        overflowX: "hidden",
-                        width: "100%",
+                        color: "#D4AF37",
+                        marginTop: 5,
+                        fontSize: {
+                          xs: "1.5rem",
+                          sm: "1.8rem",
+                          md: "2rem",
+                        },
                       }}
                     >
-                      <Typography
-                        variant="h4"
-                        component="h1"
-                        gutterBottom
-                        sx={{
-                          color: "#D4AF37",
-                          fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }, // Responsive font size
-                          wordBreak: "break-word", // Break long words if needed
-                          whiteSpace: "normal", // Allow text to wrap normally
-                          overflowWrap: "break-word", // Safe break for long words
-                        }}
-                      >
-                        {selectedStylist?.name}
-                      </Typography>
-
-                      <Typography variant="body1" mb={2}>
-                        {/* <strong>Bio:</strong> */}
-                        {selectedStylist?.bio}
-                      </Typography>
-                      <Typography variant="body1">
-                        <strong>Erfarenhet:</strong>{" "}
-                        {selectedStylist?.experience}
-                      </Typography>
-                      <Typography variant="body1">
-                        <strong>Tillgänglighet:</strong>{" "}
-                        {selectedStylist?.availability?.days?.join(", ")}{" "}
-                        {selectedStylist?.availability?.hours?.start + " "}-
-                        {" " + selectedStylist?.availability?.hours?.end}
-                      </Typography>
-                      <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap" }}>
-                        {selectedStylist?.specialties?.map(
-                          (specialty, index) => (
-                            <Chip
-                              key={index}
-                              label={specialty}
-                              sx={{
-                                mr: 1,
-                                mb: 1,
-                                background: "#D4AF37",
-                                color: "#FFFFFF",
-                              }}
-                            />
-                          )
-                        )}
-                      </Box>
-
-                      <Box sx={{ mb: 4 }}>
-                        <Typography
-                          variant="h5"
-                          gutterBottom
-                          sx={{
-                            color: "#D4AF37",
-                            marginTop: 5,
-                            fontSize: {
-                              xs: "1.5rem",
-                              sm: "1.8rem",
-                              md: "2rem",
-                            },
-                          }}
-                        >
-                          Tjänster
-                        </Typography>
-                        <Grid container spacing={2}>
-                          {selectedStylist?.services?.map((service, index) => (
-                            <Grid key={service._id} sx={{ cursor: "default" }}>
-                              <Card
-                                sx={{
-                                  background:
-                                    "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
-                                  border: "1px solid #D4AF37",
-                                  height: "100%", // Ensure the cards take full height
-                                }}
-                              >
-                                <CardContent>
-                                  <Typography
-                                    variant="h6"
-                                    component="div"
-                                    sx={{
-                                      fontSize: { xs: "1.2rem", sm: "1.4rem" },
-                                    }}
-                                  >
-                                    {service.name}
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                  >
-                                    {service.duration} - {service.price} kr
-                                  </Typography>
-                                  <Typography
-                                    variant="body2"
-                                    color="text.secondary"
-                                  >
-                                    {service.description}
-                                  </Typography>
-                                </CardContent>
-                              </Card>
-                            </Grid>
-                          ))}
-                        </Grid>
-                      </Box>
-                    </CardContent>
-                  )}
-
-                  {/* Calendar TAB */}
-                  {tabIndex === 1 && (
-                    <CardContent
-                      sx={{
-                        p: { xs: 0, sm: 0, md: 4 },
-                        overflowX: "hidden",
-                        width: "100%",
-                      }}
-                    >
-                      <Typography
-                        variant="h4"
-                        component="h1"
-                        gutterBottom
-                        sx={{
-                          color: "#D4AF37",
-                          fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }, // Adjust font size based on device
-                        }}
-                      >
-                        Välj datum och tid
-                      </Typography>
-                      <Grid container spacing={3}>
-                        <Grid
-                          size={{
-                            xs: 12,
-                            sm: 12,
-                            md: 6,
-                            lg: 6,
-                            xl: 6,
-                          }}
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            flexDirection: "column",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Box width="100%">
-                            {error && (
-                              <Alert
-                                severity="error"
-                                sx={{
-                                  width: {
-                                    xs: "100%",
-                                    sm: "100%",
-                                    md: "70%",
-                                    lg: "70%",
-                                  },
-                                }}
-                              >
-                                {error}
-                              </Alert>
-                            )}
-                            <LocalizationProvider
-                              dateAdapter={AdapterDateFns}
-                              adapterLocale={sv}
-                            >
-                              <DateCalendar
-                                value={selectedDate}
-                                onChange={handleDateChange}
-                                minDate={getNextDate()}
-                                sx={{
-                                  "& .Mui-selected": {
-                                    backgroundColor: "#D4AF37 !important",
-                                  },
-                                  "& .MuiPickersDay-dayWithMargin": {
-                                    "&:hover": {
-                                      backgroundColor:
-                                        "rgba(212, 175, 55, 0.1)",
-                                    },
-                                  },
-                                  "& .MuiPickersDay-today": {
-                                    border: "none !important",
-                                  },
-                                  width: {
-                                    xs: "100%",
-                                    sm: "100%",
-                                  },
-                                }}
-                              />
-                            </LocalizationProvider>
-                          </Box>
-                        </Grid>
-                        <Grid
-                          size={{
-                            xs: 12,
-                            sm: 12,
-                            md: 6,
-                            lg: 6,
-                            xl: 6,
-                          }}
-                        >
-                          <Box>
-                            <Typography variant="subtitle1" gutterBottom>
-                              Tillgängliga tider:
-                            </Typography>
-                            <Grid container spacing={1}>
-                              {generateHourlySlots(
-                                selectedStylist.availability.hours.start,
-                                selectedStylist.availability.hours.end
-                              )?.map((time, index) => (
-                                <Grid key={index}>
-                                  <Button
-                                    disabled={bookedSlots.includes(time)}
-                                    variant={
-                                      selectedTime === time
-                                        ? "contained"
-                                        : "outlined"
-                                    }
-                                    onClick={() => handleTimeSelect(time)}
-                                    sx={{
-                                      width: "100%",
-                                      borderColor: "#D4AF37",
-                                      color:
-                                        selectedTime === time
-                                          ? "#FFFFFF"
-                                          : "#D4AF37",
-                                      "&:hover": {
-                                        borderColor: "#B38B2D",
-                                      },
-                                    }}
-                                  >
-                                    {time}
-                                  </Button>
-                                </Grid>
-                              ))}
-                            </Grid>
-                          </Box>
-                          <Box sx={{ mt: 2 }}>
-                            <StyledButton
-                              variant="contained"
-                              onClick={handleBooking}
-                              disabled={!selectedDate || !selectedTime}
-                              sx={{
-                                width: { xs: "100%", sm: "50%" }, // Full width on small screens, 50% width on medium screens
-                                marginTop: "16px",
-                              }}
-                            >
-                              {bookingLoading ? (
-                                <CircularProgress size={24} />
-                              ) : (
-                                "Boka tid"
-                              )}
-                            </StyledButton>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  )}
-
-                  {/* Reviews TAB */}
-                  {tabIndex === 2 && (
-                    <CardContent
-                      sx={{
-                        p: { xs: 0, sm: 0, md: 4 },
-                        overflowX: "hidden",
-                        width: "100%",
-                      }}
-                    >
-                      <Typography
-                        variant="h4"
-                        component="h1"
-                        gutterBottom
-                        sx={{
-                          color: "#D4AF37",
-                          fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
-                          mb: 2,
-                        }}
-                      >
-                        Reviews
-                      </Typography>
-                      <Grid
-                        direction="row"
-                        container
-                        spacing={3}
-                        sx={{ overflow: "hidden" }}
-                      >
-                        <Grid
-                          maxHeight={450}
-                          size={{
-                            xs: 12,
-                            sm: 12,
-                            md: 6,
-                            lg: 6,
-                            xl: 6,
-                          }}
-                          style={{ overflowX: "auto" }}
-                        >
-                          {!userReviews.length && (
-                            <Typography
-                              component="p"
-                              gutterBottom
-                              sx={{
-                                fontSize: {
-                                  xs: "1.5rem",
-                                  sm: "1.5rem",
-                                  md: "1.5rem",
-                                },
-                                mb: 2,
-                              }}
-                            >
-                              No Reviews
-                            </Typography>
-                          )}
-                          {userReviews.map((review, index) => (
-                            <Box key={index} mb={3}>
-                              <Box display="flex" alignItems="center">
-                                <Avatar src="" sx={{ marginRight: 2 }} />
-                                <Box>
-                                  <Typography
-                                    variant="subtitle1"
-                                    component="p"
-                                    gutterBottom
-                                    sx={{
-                                      color: "#D4AF37",
-                                      margin: 0,
-                                      padding: 0,
-                                    }}
-                                  >
-                                    {review.name}
-                                  </Typography>
-                                  <Rating
-                                    initialValue={review.rating}
-                                    size={18}
-                                    readonly
-                                  />
-                                </Box>
-                              </Box>
-                              <Box paddingX={1}>
-                                <Typography
-                                  variant="subtitle2"
-                                  component="p"
-                                  gutterBottom
-                                  sx={{ maxWidth: "95%" }}
-                                >
-                                  {review.review}
-                                </Typography>
-                              </Box>
-                            </Box>
-                          ))}
-                        </Grid>
-                        <Grid
-                          size={{
-                            xs: 12,
-                            sm: 12,
-                            md: 6,
-                            lg: 6,
-                            xl: 6,
-                          }}
-                        >
-                          <Box>
-                            <Typography variant="subtitle1" gutterBottom>
-                              Share your feedback
-                            </Typography>
-                            <TextField
-                              type="text"
-                              name="userName"
-                              value={ratingForm.userName}
-                              onChange={handleRatingFormChange}
-                              placeholder="Enter your name"
-                              required
-                              style={{
-                                marginBottom: 10,
-                                width: "80%",
-                              }}
-                            />
-                          </Box>
-                          <Box>
-                            <TextAreaStyle
-                              minRows={8}
-                              name="userReview"
-                              placeholder="Enter your review here..."
-                              className="textarea"
-                              required
-                              value={ratingForm.userReview}
-                              onChange={handleRatingFormChange}
-                              style={{
-                                width: "80%",
-                              }}
-                            />
-                          </Box>
-                          <Box>
-                            <Rating
-                              transition
-                              allowFraction
-                              initialValue={ratingForm.rating}
-                              onClick={(value) =>
-                                setRatingForm((prev) => ({
-                                  ...prev,
-                                  rating: value,
-                                }))
-                              }
-                            />
-                          </Box>
-
-                          <Box>
-                            <StyledButton
-                              type="submit"
-                              variant="contained"
-                              onClick={handleRate}
-                              disabled={!ratingForm.rating}
-                              sx={{
-                                width: { xs: "100%", sm: "25%" }, // Full width on small screens, 50% width on medium screens
-                                marginTop: "16px",
-                                textTransform: "capitalize",
-                              }}
-                            >
-                              {ratingLoader ? (
-                                <CircularProgress size={24} />
-                              ) : (
-                                "Rate"
-                              )}
-                            </StyledButton>
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  )}
-
-                  {/* Photos */}
-                  {tabIndex === 3 && (
-                    <CardContent
-                      sx={{
-                        p: { xs: 0, sm: 0, md: 4 },
-                        overflowX: "hidden",
-                        width: "100%",
-                      }}
-                    >
-                      <Typography
-                        variant="h4"
-                        component="h1"
-                        gutterBottom
-                        sx={{
-                          color: "#D4AF37",
-                          fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
-                          mb: 2,
-                        }}
-                      >
-                        Photos
-                      </Typography>
-                      <Grid container spacing={3} sx={{ maxHeight: "25rem" }}>
-                        <Grid>
-                          {reviewImages.splice(0, 10).map((img, index) => (
-                            <img
-                              key={index}
-                              src={img}
-                              style={{
-                                width: "30%",
-                                height: "auto",
-                                margin: "5px",
-                                borderRadius: "5px",
-                                cursor: "pointer",
-                              }}
-                            />
-                          ))}
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  )}
-
-                  {/* Contact TAB */}
-                  {tabIndex === 4 && (
-                    <CardContent
-                      sx={{
-                        p: { xs: 0, sm: 0, md: 4 },
-                        overflowX: "hidden",
-                        width: "100%",
-                      }}
-                    >
-                      <Typography
-                        variant="h4"
-                        component="h1"
-                        gutterBottom
-                        sx={{
-                          color: "#D4AF37",
-                          fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
-                        }}
-                      >
-                        Location
-                      </Typography>
-                      <Grid container spacing={5}>
-                        <Grid
-                          size={{
-                            xs: 12,
-                            sm: 12,
-                            md: 6,
-                            lg: 6,
-                            xl: 6,
-                          }}
-                          sx={{ display: "flex", justifyContent: "center" }}
-                        >
-                          <div
-                            style={{
-                              width: "100%",
-                              height: "auto",
-                              maxWidth: "500px",
-                              margin: 5,
+                      Tjänster
+                    </Typography>
+                    <Grid container spacing={2}>
+                      {selectedStylist?.services?.map((service, index) => (
+                        <Grid key={service._id} sx={{ cursor: "default" }}>
+                          <Card
+                            sx={{
+                              background:
+                                "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
+                              border: "1px solid #D4AF37",
+                              height: "100%", // Ensure the cards take full height
                             }}
                           >
-                            <img
-                              src={mapLocationImage}
-                              alt="map location"
-                              style={{
-                                width: "100%",
-                                objectFit: "contain",
-                                borderRadius: "15px",
-                                cursor: "pointer",
-                              }}
-                            />
-                          </div>
+                            <CardContent>
+                              <Typography
+                                variant="h6"
+                                component="div"
+                                sx={{
+                                  fontSize: { xs: "1.2rem", sm: "1.4rem" },
+                                }}
+                              >
+                                {service.name}
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {service.duration} - {service.price} kr
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                              >
+                                {service.description}
+                              </Typography>
+                            </CardContent>
+                          </Card>
                         </Grid>
-                        <Grid
-                          size={{
-                            xs: 12,
-                            sm: 12,
-                            md: 6,
-                            lg: 6,
-                            xl: 6,
-                          }}
-                          padding={2}
+                      ))}
+                    </Grid>
+                  </Box>
+                </CardContent>
+              )}
+
+              {/* Calendar */}
+              {tabIndex === 1 && (
+                <CardContent
+                  sx={{
+                    p: { xs: 0, sm: 0, md: 2 },
+                    overflowX: "hidden",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    sx={{
+                      color: "#D4AF37",
+                      fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" }, // Adjust font size based on device
+                    }}
+                  >
+                    Välj datum och tid
+                  </Typography>
+                  <Grid container spacing={3}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 12,
+                        md: 6,
+                        lg: 6,
+                        xl: 6,
+                      }}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Box width="100%">
+                        {error && (
+                          <Alert
+                            severity="error"
+                            sx={{
+                              width: {
+                                xs: "100%",
+                                sm: "100%",
+                                md: "70%",
+                                lg: "70%",
+                              },
+                            }}
+                          >
+                            {error}
+                          </Alert>
+                        )}
+                        <LocalizationProvider
+                          dateAdapter={AdapterDateFns}
+                          adapterLocale={sv}
                         >
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ marginBottom: 1 }}
-                          >
-                            <strong>Adress:</strong> {selectedStylist?.location}
-                          </Typography>
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ marginBottom: 1 }}
-                          >
-                            <strong>Phone:</strong> {selectedStylist?.phone}
-                          </Typography>
-                          <Typography
-                            variant="subtitle1"
-                            sx={{ marginBottom: 1 }}
-                          >
-                            <strong>Email:</strong> {selectedStylist?.email}
-                          </Typography>
+                          <DateCalendar
+                            value={selectedDate}
+                            onChange={handleDateChange}
+                            minDate={getNextDate()}
+                            sx={{
+                              "& .Mui-selected": {
+                                backgroundColor: "#D4AF37 !important",
+                              },
+                              "& .MuiPickersDay-dayWithMargin": {
+                                "&:hover": {
+                                  backgroundColor: "rgba(212, 175, 55, 0.1)",
+                                },
+                              },
+                              "& .MuiPickersDay-today": {
+                                border: "none !important",
+                              },
+                              width: {
+                                xs: "100%",
+                                sm: "100%",
+                              },
+                            }}
+                          />
+                        </LocalizationProvider>
+                      </Box>
+                    </Grid>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 12,
+                        md: 6,
+                        lg: 6,
+                        xl: 6,
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="subtitle1" gutterBottom>
+                          Tillgängliga tider:
+                        </Typography>
+                        <Grid container spacing={1}>
+                          {generateHourlySlots(
+                            selectedStylist.availability.hours.start,
+                            selectedStylist.availability.hours.end
+                          )?.map((time, index) => (
+                            <Grid key={index}>
+                              <Button
+                                disabled={bookedSlots.includes(time)}
+                                variant={
+                                  selectedTime === time
+                                    ? "contained"
+                                    : "outlined"
+                                }
+                                onClick={() => handleTimeSelect(time)}
+                                sx={{
+                                  width: "100%",
+                                  borderColor: "#D4AF37",
+                                  color:
+                                    selectedTime === time
+                                      ? "#FFFFFF"
+                                      : "#D4AF37",
+                                  "&:hover": {
+                                    borderColor: "#B38B2D",
+                                  },
+                                }}
+                              >
+                                {time}
+                              </Button>
+                            </Grid>
+                          ))}
                         </Grid>
-                      </Grid>
-                    </CardContent>
-                  )}
-                </Box>
-              </Box>
-            </StyledCard>
+                      </Box>
+                      <Box sx={{ mt: 2 }}>
+                        <StyledButton
+                          variant="contained"
+                          onClick={handleBooking}
+                          disabled={!selectedDate || !selectedTime}
+                          sx={{
+                            width: { xs: "100%", sm: "50%" }, // Full width on small screens, 50% width on medium screens
+                            marginTop: "16px",
+                          }}
+                        >
+                          {bookingLoading ? (
+                            <CircularProgress size={24} />
+                          ) : (
+                            "Boka tid"
+                          )}
+                        </StyledButton>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              )}
+
+              {/* Reviews */}
+              {tabIndex === 2 && (
+                <CardContent
+                  sx={{
+                    p: { xs: 0, sm: 0, md: 2 },
+                    overflowX: "hidden",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    sx={{
+                      color: "#D4AF37",
+                      fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
+                      mb: 2,
+                    }}
+                  >
+                    Reviews
+                  </Typography>
+                  <Grid
+                    direction="row"
+                    container
+                    spacing={3}
+                    sx={{ overflow: "hidden" }}
+                  >
+                    <Grid
+                      maxHeight={450}
+                      size={{
+                        xs: 12,
+                        sm: 12,
+                        md: 6,
+                        lg: 6,
+                        xl: 6,
+                      }}
+                      style={{ overflowX: "auto" }}
+                    >
+                      {!userReviews.length && (
+                        <Typography
+                          component="p"
+                          gutterBottom
+                          sx={{
+                            fontSize: {
+                              xs: "1.5rem",
+                              sm: "1.5rem",
+                              md: "1.5rem",
+                            },
+                            mb: 2,
+                          }}
+                        >
+                          No Reviews
+                        </Typography>
+                      )}
+                      {userReviews.map((review, index) => (
+                        <Box key={index} mb={3}>
+                          <Box display="flex" alignItems="center">
+                            <Avatar src="" sx={{ marginRight: 2 }} />
+                            <Box>
+                              <Typography
+                                variant="subtitle1"
+                                component="p"
+                                gutterBottom
+                                sx={{
+                                  color: "#D4AF37",
+                                  margin: 0,
+                                  padding: 0,
+                                }}
+                              >
+                                {review.name}
+                              </Typography>
+                              <Rating
+                                initialValue={review.rating}
+                                size={18}
+                                readonly
+                              />
+                            </Box>
+                          </Box>
+                          <Box paddingX={1}>
+                            <Typography
+                              variant="subtitle2"
+                              component="p"
+                              gutterBottom
+                              sx={{ maxWidth: "95%" }}
+                            >
+                              {review.review}
+                            </Typography>
+                          </Box>
+                        </Box>
+                      ))}
+                    </Grid>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 12,
+                        md: 6,
+                        lg: 6,
+                        xl: 6,
+                      }}
+                    >
+                      <Box>
+                        <Typography variant="subtitle1" gutterBottom>
+                          Share your feedback
+                        </Typography>
+                        <TextField
+                          type="text"
+                          name="userName"
+                          value={ratingForm.userName}
+                          onChange={handleRatingFormChange}
+                          placeholder="Enter your name"
+                          required
+                          style={{
+                            marginBottom: 10,
+                            width: "80%",
+                          }}
+                        />
+                      </Box>
+                      <Box>
+                        <TextAreaStyle
+                          minRows={8}
+                          name="userReview"
+                          placeholder="Enter your review here..."
+                          className="textarea"
+                          required
+                          value={ratingForm.userReview}
+                          onChange={handleRatingFormChange}
+                          style={{
+                            width: "80%",
+                          }}
+                        />
+                      </Box>
+                      <Box>
+                        <Rating
+                          transition
+                          allowFraction
+                          initialValue={ratingForm.rating}
+                          onClick={(value) =>
+                            setRatingForm((prev) => ({
+                              ...prev,
+                              rating: value,
+                            }))
+                          }
+                        />
+                      </Box>
+
+                      <Box>
+                        <StyledButton
+                          type="submit"
+                          variant="contained"
+                          onClick={handleRate}
+                          disabled={!ratingForm.rating}
+                          sx={{
+                            width: { xs: "100%", sm: "25%" }, // Full width on small screens, 50% width on medium screens
+                            marginTop: "16px",
+                            textTransform: "capitalize",
+                          }}
+                        >
+                          {ratingLoader ? (
+                            <CircularProgress size={24} />
+                          ) : (
+                            "Rate"
+                          )}
+                        </StyledButton>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              )}
+
+              {/* Photos */}
+              {tabIndex === 3 && (
+                <CardContent
+                  sx={{
+                    p: { xs: 0, sm: 0, md: 2 },
+                    overflowX: "hidden",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    sx={{
+                      color: "#D4AF37",
+                      fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
+                      mb: 2,
+                    }}
+                  >
+                    Photos
+                  </Typography>
+                  <Grid container spacing={3} sx={{ maxHeight: "25rem" }}>
+                    <Grid>
+                      {reviewImages.splice(0, 10).map((img, index) => (
+                        <img
+                          key={index}
+                          src={img}
+                          style={{
+                            width: "30%",
+                            height: "auto",
+                            margin: "5px",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      ))}
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              )}
+
+              {/* Contact */}
+              {tabIndex === 4 && (
+                <CardContent
+                  sx={{
+                    p: { xs: 0, sm: 0, md: 2 },
+                    overflowX: "hidden",
+                    width: "100%",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    component="h1"
+                    gutterBottom
+                    sx={{
+                      color: "#D4AF37",
+                      fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" }, // Adjust font size for different screens
+                    }}
+                  >
+                    Location
+                  </Typography>
+                  <Grid container spacing={5}>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 12,
+                        md: 6,
+                        lg: 6,
+                        xl: 6,
+                      }}
+                      sx={{ display: "flex", justifyContent: "center" }}
+                    >
+                      <div
+                        style={{
+                          width: "100%",
+                          height: "auto",
+                          maxWidth: "500px",
+                          margin: 5,
+                        }}
+                      >
+                        <img
+                          src={mapLocationImage}
+                          alt="map location"
+                          style={{
+                            width: "100%",
+                            objectFit: "contain",
+                            borderRadius: "15px",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </div>
+                    </Grid>
+                    <Grid
+                      size={{
+                        xs: 12,
+                        sm: 12,
+                        md: 6,
+                        lg: 6,
+                        xl: 6,
+                      }}
+                      padding={2}
+                    >
+                      <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
+                        <strong>Adress:</strong> {selectedStylist?.location}
+                      </Typography>
+                      <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
+                        <strong>Phone:</strong> {selectedStylist?.phone}
+                      </Typography>
+                      <Typography variant="subtitle1" sx={{ marginBottom: 1 }}>
+                        <strong>Email:</strong> {selectedStylist?.email}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              )}
+            </Box>
           </Grid>
         </Grid>
       </StyledPaper>
