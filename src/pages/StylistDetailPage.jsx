@@ -815,11 +815,12 @@ const StylistDetailPage = () => {
                           }}
                         >
                           <img
-                            src={mapLocationImage}
+                            src={`${API_BASE_URL}/${selectedStylist?.location?.map}`}
                             alt="map location"
                             style={{
                               width: "100%",
-                              objectFit: "contain",
+                              height: "50%",
+                              objectFit: "fill",
                               borderRadius: "15px",
                               cursor: "pointer",
                             }}
@@ -840,7 +841,8 @@ const StylistDetailPage = () => {
                           variant="subtitle1"
                           sx={{ marginBottom: 1 }}
                         >
-                          <strong>Adress:</strong> {selectedStylist?.location}
+                          <strong>Adress:</strong>{" "}
+                          {selectedStylist?.location?.address}
                         </Typography>
                         <Typography
                           variant="subtitle1"
