@@ -88,6 +88,7 @@ const AdminLogin = () => {
           name: res.data.user.name,
           id: res.data.user.id,
           stylist: res.data.user.stylist,
+          hasPremium: res.data.user.hasPremium,
         });
         navigate("/admin/dashboard");
       } else {

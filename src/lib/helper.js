@@ -15,8 +15,8 @@ export const getNextDate = () => {
 
 export function generateHourlySlots(start, end) {
     const slots = [];
-    const [startHour, startMinute] = start.split(":").map(Number);
-    const [endHour, endMinute] = end.split(":").map(Number);
+    const [startHour, startMinute] = start?.split(":").map(Number);
+    const [endHour, endMinute] = end?.split(":").map(Number);
 
     let current = new Date();
     current.setHours(startHour, startMinute, 0, 0);

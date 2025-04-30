@@ -182,14 +182,15 @@ const AdminDashboard = () => {
 
   const getStatistics = () => {
     const totalBookings = bookings.length;
+
     const confirmedBookings = bookings.filter(
-      (b) => b.status === "confirmed"
+      (b) => b.status === "confirmed" || b.status === "Bekräftad"
     ).length;
     const pendingBookings = bookings.filter(
-      (b) => b.status === "pending"
+      (b) => b.status === "pending" || b.status === "Väntar"
     ).length;
     const cancelledBookings = bookings.filter(
-      (b) => b.status === "cancelled"
+      (b) => b.status === "cancelled" || b.status === "Avbokad"
     ).length;
 
     return {
@@ -262,54 +263,6 @@ const AdminDashboard = () => {
           </StyledButton>
         </Box>
 
-        {/* <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Totalt antal bokningar
-                </Typography>
-                <Typography variant="h4">{stats.totalBookings}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Bekräftade bokningar
-                </Typography>
-                <Typography variant="h4" color="success.main">
-                  {stats.confirmedBookings}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Väntande bokningar
-                </Typography>
-                <Typography variant="h4" color="warning.main">
-                  {stats.pendingBookings}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <Card>
-              <CardContent>
-                <Typography color="textSecondary" gutterBottom>
-                  Avbokade bokningar
-                </Typography>
-                <Typography variant="h4" color="error.main">
-                  {stats.cancelledBookings}
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid> */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {[
             { label: "Totalt antal bokningar", value: stats.totalBookings },

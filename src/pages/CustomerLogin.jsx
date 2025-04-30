@@ -83,10 +83,12 @@ const CustomerLogin = () => {
       const res = await loginUser(formData);
       if (res.data.token.length > 0 && res.data.user.id.length > 0) {
         await login({
+          id: res.data.user.id,
+          name: res.data.user.name,
           email: res.data.user.email,
           role: res.data.user.role,
-          name: res.data.user.name,
-          id: res.data.user.id,
+          stylist: res.data.user.stylist,
+          hasPremium: res.data.user.hasPremium,
         });
         navigate("/customer/dashboard");
       } else {

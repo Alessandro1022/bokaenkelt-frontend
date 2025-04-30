@@ -47,7 +47,7 @@ const StylistGrid = () => {
   }, []);
 
   const handleStylistClick = (stylist) => {
-    navigate(`/stylist/${stylist?._id}`, { state: stylist });
+    navigate(`/stylist/${stylist?._id}`);
   };
 
   const filteredStylists = stylists.filter(
