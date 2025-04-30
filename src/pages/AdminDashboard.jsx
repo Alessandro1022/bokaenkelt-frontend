@@ -31,67 +31,12 @@ import {
 import { styled } from "@mui/material/styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
 import LogoutIcon from "@mui/icons-material/Logout";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PeopleIcon from "@mui/icons-material/People";
-import EventIcon from "@mui/icons-material/Event";
-import { format } from "date-fns";
-import { sv } from "date-fns/locale";
-import { deleteBookings, fetchBookings, updateBookings } from "../api/bookings";
-
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(3),
-  marginBottom: theme.spacing(3),
-  background: "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
-  border: "1px solid #D4AF37",
-  borderRadius: 16,
-  boxShadow: "0 4px 8px rgba(212, 175, 55, 0.15)",
-}));
-
-const StyledTypography = styled(Typography)(({ theme }) => ({
-  fontFamily: "Playfair Display, serif",
-  color: "#D4AF37",
-  marginBottom: theme.spacing(3),
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  background: "linear-gradient(45deg, #D4AF37 30%, #B38B2D 90%)",
-  boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
-  color: "#FFFFFF",
-  padding: "10px 24px",
-  "&:hover": {
-    background: "linear-gradient(45deg, #B38B2D 30%, #D4AF37 90%)",
-  },
-}));
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  fontFamily: "Playfair Display, serif",
-  color: "#D4AF37",
-  fontWeight: "bold",
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "#D4AF37",
-    },
-    "&:hover fieldset": {
-      borderColor: "#B38B2D",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#D4AF37",
-    },
-  },
-  "& .MuiInputLabel-root": {
-    color: "#D4AF37",
-    "&.Mui-focused": {
-      color: "#D4AF37",
-    },
-  },
-}));
+import {
+  deleteBookings,
+  fetchStylistBookings,
+  updateBookings,
+} from "../api/bookings";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -115,11 +60,11 @@ const AdminDashboard = () => {
 
   const loadBookings = async () => {
     try {
-      const response = await fetchBookings();
-      const storedBookings = response.data.length ? response.data : [];
+      const response = await fetchStylistBookings();
+      const storedBookings = response?.data?.data?.length
+        ? response?.data?.data
+        : [];
       setBookings(storedBookings);
-      // const storedBookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-      // setBookings(storedBookings);
     } catch (err) {
       setError("Kunde inte ladda bokningar");
       console.error("Error loading bookings:", err);
@@ -564,3 +509,51 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  background: "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
+  border: "1px solid #D4AF37",
+  borderRadius: 16,
+  boxShadow: "0 4px 8px rgba(212, 175, 55, 0.15)",
+}));
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  fontFamily: "Playfair Display, serif",
+  color: "#D4AF37",
+  marginBottom: theme.spacing(3),
+}));
+const StyledButton = styled(Button)(({ theme }) => ({
+  background: "linear-gradient(45deg, #D4AF37 30%, #B38B2D 90%)",
+  boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
+  color: "#FFFFFF",
+  padding: "10px 24px",
+  "&:hover": {
+    background: "linear-gradient(45deg, #B38B2D 30%, #D4AF37 90%)",
+  },
+}));
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  fontFamily: "Playfair Display, serif",
+  color: "#D4AF37",
+  fontWeight: "bold",
+}));
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  marginBottom: theme.spacing(2),
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "#D4AF37",
+    },
+    "&:hover fieldset": {
+      borderColor: "#B38B2D",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#D4AF37",
+    },
+  },
+  "& .MuiInputLabel-root": {
+    color: "#D4AF37",
+    "&.Mui-focused": {
+      color: "#D4AF37",
+    },
+  },
+}));

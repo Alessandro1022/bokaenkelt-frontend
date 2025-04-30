@@ -28,6 +28,15 @@ export const fetchBookings = async () => {
     }
 }
 
+export const fetchStylistBookings = async () => {
+    try {
+        const response = await api.get("/api/bookings/stylist");
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const updateBookings = async (bookingData) => {
     try {
         const _id = bookingData.id || bookingData._id;

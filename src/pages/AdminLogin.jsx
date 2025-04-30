@@ -87,6 +87,7 @@ const AdminLogin = () => {
           role: res.data.user.role,
           name: res.data.user.name,
           id: res.data.user.id,
+          stylist: res.data.user.stylist,
         });
         navigate("/admin/dashboard");
       } else {
