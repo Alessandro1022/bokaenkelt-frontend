@@ -9,35 +9,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Link as RouterLink } from "react-router-dom";
-
-const StyledBox = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  minHeight: "calc(100vh - 200px)",
-  textAlign: "center",
-  padding: theme.spacing(4),
-  [theme.breakpoints.down("sm")]: {
-    padding: theme.spacing(2),
-  },
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-  background: "linear-gradient(45deg, #D4AF37 30%, #B38B2D 90%)",
-  boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
-  color: "#FFFFFF",
-  padding: theme.spacing(1.5, 4),
-  fontSize: "1rem",
-  marginTop: theme.spacing(4),
-  "&:hover": {
-    background: "linear-gradient(45deg, #B38B2D 30%, #D4AF37 90%)",
-  },
-  [theme.breakpoints.down("sm")]: {
-    fontSize: "0.9rem",
-    padding: theme.spacing(1, 3),
-  },
-}));
+import Logo from "../assets/logo.png";
 
 const Home = () => {
   return (
@@ -97,7 +69,10 @@ const Home = () => {
         >
           Book Now
         </StyledButton>
-        <Box mt={5}>
+        <Box mt={5} mb={5}>
+          <img src={Logo} alt="logo" style={{ width: 200, height: 200 }} />
+        </Box>
+        <Box>
           <Card
             sx={{
               background: "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
@@ -162,11 +137,8 @@ const Home = () => {
                 Redo att komma igång?
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Mejla oss på:{" "}
-                <a href="bokaenkelt1@gmail.com" style={{ color: "blue" }}>
-                  bokaenkelt1@gmail.com
-                </a>{" "}
-                för att aktivera ditt konto eller starta din prenumeration.
+                Mejla oss på: bokaenkelt1@gmail.com för att aktivera ditt konto
+                eller starta din prenumeration.
               </Typography>
             </CardContent>
           </Card>
@@ -177,3 +149,31 @@ const Home = () => {
 };
 
 export default Home;
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: "calc(100vh - 200px)",
+  textAlign: "center",
+  padding: theme.spacing(4),
+  [theme.breakpoints.down("sm")]: {
+    padding: theme.spacing(2),
+  },
+}));
+const StyledButton = styled(Button)(({ theme }) => ({
+  background: "linear-gradient(45deg, #D4AF37 30%, #B38B2D 90%)",
+  boxShadow: "0 3px 5px 2px rgba(212, 175, 55, .3)",
+  color: "#FFFFFF",
+  padding: theme.spacing(1.5, 4),
+  fontSize: "1rem",
+  marginTop: theme.spacing(4),
+  "&:hover": {
+    background: "linear-gradient(45deg, #B38B2D 30%, #D4AF37 90%)",
+  },
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "0.9rem",
+    padding: theme.spacing(1, 3),
+  },
+}));

@@ -37,7 +37,6 @@ import {
 } from "../api/ratings";
 import { useAuth } from "../contexts/AuthContext";
 import { getBookedTimeSlots } from "../api/bookings";
-import mapLocationImage from "../assets/map_location.png";
 import { getStylistDetails } from "../api/stylists";
 
 const StylistDetailPage = () => {
