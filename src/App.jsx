@@ -69,7 +69,7 @@ const router = createBrowserRouter(
       element: <Layout />,
       children: [
         { index: true, element: <Home /> },
-        { path: "booking", element: <BookingForm /> },
+        // { path: "booking", element: <BookingForm /> },
         { path: "booking-confirmation", element: <BookingConfirmation /> },
         { path: "admin/login", element: <AdminLogin /> },
         { path: "customer/login", element: <CustomerLogin /> },
@@ -84,7 +84,7 @@ const router = createBrowserRouter(
         { path: "customer/dashboard", element: <CustomerDashboard /> },
         { path: "stylists", element: <StylistGrid /> },
         { path: "stylist/:stylistId", element: <StylistDetailPage /> },
-        { path: "book/:stylistId", element: <BookingForm /> },
+        // { path: "book/:stylistId", element: <BookingForm /> },
         { path: "account", element: <AccountPage /> },
         { path: "*", element: <NotFound /> },
       ],

@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Container, Typography, Button } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -90,6 +97,80 @@ const Home = () => {
         >
           Book Now
         </StyledButton>
+        <Box mt={5}>
+          <Card
+            sx={{
+              background: "linear-gradient(135deg, #FFFFFF 0%, #FDF6E3 100%)",
+              border: "1px solid #D4AF37",
+              height: "100%",
+            }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+              }}
+            >
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{
+                  fontSize: { xs: "1.2rem", sm: "1.4rem" },
+                }}
+              >
+                Prisplan – Enkelt & Transparent
+              </Typography>
+
+              <Typography mt={2} variant="body2" color="text.secondary">
+                Fast pris: 149 kr/månad Ingen bindningstid. Ingen startavgift.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Första månaden är helt gratis!
+              </Typography>
+
+              <Typography mt={2} variant="body2" color="text.secondary">
+                Med vår prisplan får du tillgång till alla funktioner i
+                BokaEnkelt:
+              </Typography>
+
+              <Typography variant="body2" color="text.secondary">
+                • Obegränsat antal bokningar
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • Full kontroll via mobil eller dator
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • Smart kalenderintegration
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • Påminnelser till kunder automatiskt
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                • Statistik & översikt över din verksamhet
+              </Typography>
+
+              <Typography mt={2} variant="body2" color="text.secondary">
+                Boka smidigt. Arbeta effektivt. Väx smart.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Testa gratis i 30 dagar - ingen betalning krävs vid
+                registrering.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Redo att komma igång?
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Mejla oss på:{" "}
+                <a href="bokaenkelt1@gmail.com" style={{ color: "blue" }}>
+                  bokaenkelt1@gmail.com
+                </a>{" "}
+                för att aktivera ditt konto eller starta din prenumeration.
+              </Typography>
+            </CardContent>
+          </Card>
+        </Box>
       </StyledBox>
     </Container>
   );
