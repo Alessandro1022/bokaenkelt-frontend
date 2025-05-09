@@ -162,7 +162,7 @@ const BookingConfirmation = () => {
               </Alert>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{ lg: 4, md: 4, sm: 12, xs: 12 }}>
               <StyledTypography variant="h6">Bokningsdetaljer</StyledTypography>
               <Typography variant="body1">
                 <strong>Datum:</strong> {formatDate(booking.date)}
@@ -178,13 +178,19 @@ const BookingConfirmation = () => {
               </Typography>
             </Grid>
 
-            <Grid item xs={12} sm={6}>
+            <Grid item size={{ lg: 4, md: 4, sm: 12, xs: 12 }}>
               <StyledTypography variant="h6">Kundinformation</StyledTypography>
               <Typography variant="body1">
                 <strong>Namn:</strong> {booking.customerName}
               </Typography>
               <Typography variant="body1">
-                <strong>Telefon:</strong> {booking.customerPhone}
+                {/* <strong>Telefon:</strong> {booking.customerPhone} */}
+                <strong>Email:</strong> {booking.customerEmail}
+              </Typography>
+              <Typography variant="subtitle2" mt={1}>
+                Tack för din bokning hos BokaEnkelt! En bekräftelse har skickats
+                till din e-post - kolla även skräpposten. Du får en påminnelse
+                12 timmar innan din tid.
               </Typography>
             </Grid>
 
