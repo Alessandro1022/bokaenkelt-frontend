@@ -109,7 +109,8 @@ const BookingForm = () => {
       : null,
     service: location.state?.service || "",
     customerName: "",
-    customerPhone: "",
+    // customerPhone: "",
+    customerEmail: user?.email || "",
     id: user?.id || "",
   });
 
@@ -125,7 +126,8 @@ const BookingForm = () => {
       setFormData((prev) => ({
         ...prev,
         customerName: userData.name,
-        customerPhone: userData.phone || "1234567890",
+        customerEmail: userData.email || "",
+        // customerPhone: userData.phone || "1234567890",
       }));
       setIsLoggedIn(true);
     }
@@ -154,9 +156,15 @@ const BookingForm = () => {
     }
 
     // Validera telefonnummer
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(formData.customerPhone.replace(/\s/g, ""))) {
-      setError("Vänligen ange ett giltigt telefonnummer (10 siffror)");
+    // const phoneRegex = /^[0-9]{10}$/;
+    // if (!phoneRegex.test(formData.customerPhone.replace(/\s/g, ""))) {
+    //   setError("Vänligen ange ett giltigt telefonnummer (10 siffror)");
+    //   return;
+    // }
+
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (!emailRegex.test(formData.customerEmail.trim())) {
+      setError("Vänligen ange en giltig e-postadress");
       return;
     }
 
@@ -170,7 +178,8 @@ const BookingForm = () => {
       const newBooking = {
         id: user?.id || "",
         customerName: formData.customerName,
-        customerPhone: formData.customerPhone,
+        // customerPhone: formData.customerPhone,
+        customerEmail: formData.customerEmail,
         service: formData.service,
         date: format(formData.date, "yyyy-MM-dd"),
         time: format(formData.time, "HH:mm"),
@@ -235,12 +244,23 @@ const BookingForm = () => {
                       disabled={isLoggedIn}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  {/* <Grid item xs={12} sm={6}>
                     <StyledTextField
                       fullWidth
                       label="Telefon"
                       name="customerPhone"
                       value={formData.customerPhone}
+                      onChange={handleChange}
+                      required
+                      disabled={isLoggedIn}
+                    />
+                  </Grid> */}
+                  <Grid item xs={12} sm={6}>
+                    <StyledTextField
+                      fullWidth
+                      label="email"
+                      name="customerEmail"
+                      value={formData.customerEmail}
                       onChange={handleChange}
                       required
                       disabled={isLoggedIn}
@@ -377,7 +397,7 @@ const BookingForm = () => {
               sx={{ mb: 2 }}
             />
 
-            <TextField
+            {/* <TextField
               margin="normal"
               required
               fullWidth
@@ -387,6 +407,19 @@ const BookingForm = () => {
               value={formData.customerPhone}
               onChange={handleChange}
               placeholder="0701234567"
+              sx={{ mb: 2 }}
+            /> */}
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="customerEmail"
+              label="Email"
+              name="customerEmail"
+              value={formData.customerEmail}
+              onChange={handleChange}
+              placeholder="example@mail.com"
               sx={{ mb: 2 }}
             />
 
