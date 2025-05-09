@@ -190,7 +190,8 @@ const BookingConfirmation = () => {
               <Typography variant="subtitle2" mt={1}>
                 Tack för din bokning hos BokaEnkelt! En bekräftelse har skickats
                 till din e-post - kolla även skräpposten. Du får en påminnelse
-                12 timmar innan din tid.
+                12 timmar innan din tid. OBS Vid avbokning - kontakta din
+                stylist minst 24 timmar innan.
               </Typography>
             </Grid>
 
