@@ -140,16 +140,16 @@ const StylistDetailPage = () => {
     const selectedDateTime = new Date(selectedDate);
     selectedDateTime.setHours(hours, minutes);
 
-    const startTime = new Date(selectedDate);
-    startTime.setHours(11, 0);
+    // const startTime = new Date(selectedDate);
+    // startTime.setHours(11, 0);
 
-    const endTime = new Date(selectedDate);
-    endTime.setHours(23, 0);
+    // const endTime = new Date(selectedDate);
+    // endTime.setHours(23, 0);
 
-    if (selectedDateTime < startTime || selectedDateTime > endTime) {
-      setError("Välj en tid mellan 11:00 och 23:00");
-      return;
-    }
+    // if (selectedDateTime < startTime || selectedDateTime > endTime) {
+    //   setError("Välj en tid mellan 11:00 och 23:00");
+    //   return;
+    // }
 
     setSelectedTime(time);
     setError(null);

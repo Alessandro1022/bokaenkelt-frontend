@@ -113,9 +113,9 @@ const BookingForm = () => {
     customerEmail: user?.email || "",
     id: user?.id || "",
   });
-
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Kontrollera om användaren är inloggad
@@ -174,6 +174,7 @@ const BookingForm = () => {
     }
 
     try {
+      setIsLoading(true);
       let res = {};
       const newBooking = {
         id: user?.id || "",
@@ -201,6 +202,8 @@ const BookingForm = () => {
       }
     } catch (error) {
       setError("Ett fel uppstod vid bokningen. Vänligen försök igen.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -323,8 +326,9 @@ const BookingForm = () => {
                       fullWidth
                       variant="contained"
                       sx={{ mt: 3 }}
+                      disabled={isLoading}
                     >
-                      Boka
+                      {isLoading ? <CircularProgress size={24} /> : "Boka"}
                     </StyledButton>
                   </Grid>
                 </Grid>
@@ -449,8 +453,13 @@ const BookingForm = () => {
               ))}
             </TextField>
 
-            <StyledButton type="submit" fullWidth variant="contained">
-              Boka
+            <StyledButton
+              disabled={isLoading}
+              type="submit"
+              fullWidth
+              variant="contained"
+            >
+              {isLoading ? <CircularProgress size={24} /> : "Boka"}
             </StyledButton>
           </Box>
         </StyledPaper>
