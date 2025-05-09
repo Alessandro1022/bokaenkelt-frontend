@@ -24,7 +24,6 @@ import { styled } from "@mui/material/styles";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { API_BASE_URL } from "../lib/constants";
 import {
   generateHourlySlots,
   getNextDate,
@@ -38,6 +37,7 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { getBookedTimeSlots } from "../api/bookings";
 import { getStylistDetails } from "../api/stylists";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const StylistDetailPage = () => {
   const navigate = useNavigate();

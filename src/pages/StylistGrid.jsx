@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import api from "../api/client";
-import { API_BASE_URL } from "../lib/constants";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const StylistGrid = () => {
   const [stylists, setStylists] = useState([]);

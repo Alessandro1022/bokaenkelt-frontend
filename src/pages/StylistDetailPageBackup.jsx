@@ -19,11 +19,11 @@ import { styled } from "@mui/material/styles";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import sv from "date-fns/locale/sv";
-import { API_BASE_URL } from "../lib/constants";
 import { generateHourlySlots, getNextDate } from "../lib/helper";
 import { createGuestRating, createRatings } from "../api/ratings";
 import { useAuth } from "../contexts/AuthContext";
 import { getBookedTimeSlots } from "../api/bookings";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),

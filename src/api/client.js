@@ -1,43 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL } from '../lib/constants';
-
-// Mock data for testing
-const mockStylists = {
-  '1': {
-    id: '1',
-    name: 'Woolley Cutzzz',
-    specialty: 'Herrklippning & Skäggvård',
-    experience: 5,
-    image: '/images/stylist1.jpg',
-    rating: 4.9,
-    specialties: ['Herrklippning', 'Skäggvård'],
-    bio: 'Professionell frisör med fokus på herrklippning och skäggvård. Erbjuder en avslappnad och professionell upplevelse i Kristinedal träningcenter.',
-    availability: {
-      days: ['onsdag', 'torsdag', 'fredag', 'lördag', 'söndag'],
-      hours: {
-        start: '11:00',
-        end: '23:00'
-      }
-    },
-    services: [
-      {
-        id: '1',
-        name: 'Herrklippning',
-        price: 150,
-        duration: '30 min',
-        description: 'Professionell herrklippning med modern finish'
-      },
-      {
-        id: '2',
-        name: 'Herrklippning med skägg',
-        price: 200,
-        duration: '45 min',
-        description: 'Herrklippning inklusive skäggtrimning och styling'
-      }
-    ],
-    location: 'Kristinedal träningcenter'
-  }
-};
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 // Mock data for fallbacks
 const mockData = {
