@@ -57,7 +57,7 @@ const Layout = () => {
     ...(user
       ? user.role === "admin"
         ? [{ text: "Admin", path: "/admin/dashboard" }]
-        : [{ text: "Min Profil", path: "/customer/dashboard" }]
+        : [{ text: "Min Profil", path: "/admin/dashboard" }]
       : [
           { text: "Kund Login", path: "/customer/login" },
           { text: "Admin Login", path: "/admin/login" },
