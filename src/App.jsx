@@ -25,6 +25,8 @@ import StylistGrid from "./pages/StylistGrid";
 import StylistDetailPage from "./pages/StylistDetailPage";
 import NotFound from "./pages/NotFound";
 import AccountPage from "./pages/AccountPage";
+import KontaktPage from "./pages/KontaktPage";
+import IntegritetpolicyPage from "./pages/IntegritetpolicyPage";
 
 // Components
 import PrivateRoute from "./components/PrivateRoute";
@@ -86,7 +88,9 @@ const router = createBrowserRouter(
         { path: "stylist/:stylistId", element: <StylistDetailPage /> },
         { path: "book/:stylistId", element: <BookingForm /> },
         { path: "account", element: <AccountPage /> },
-        { path: "*", element: <NotFound /> },
+        { path: "kontakt", element: <KontaktPage /> },
+        { path: "integritetpolicy", element: <IntegritetpolicyPage /> },
+        { path: "*", element: <IntegritetpolicyPage /> },
       ],
     },
   ],

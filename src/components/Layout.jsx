@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Outlet } from "react-router-dom";
 import {
   AppBar,
@@ -12,7 +12,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider,
   useMediaQuery,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -44,7 +43,7 @@ const Layout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleLogout = () => {
@@ -53,6 +52,7 @@ const Layout = () => {
   };
 
   const menuItems = [
+    { text: "Hem", path: "/" },
     { text: "Boka tid", path: "/stylists" },
     ...(user
       ? user.role === "admin"
@@ -63,6 +63,8 @@ const Layout = () => {
           { text: "Admin Login", path: "/admin/login" },
         ]),
     ...(user ? [{ text: "Logga ut", action: handleLogout }] : []),
+    { text: "Kontakt/Om oss", path: "/kontakt" },
+    { text: "Integritetpolicy/GDPR", path: "/integritetpolicy" },
   ];
 
   const handleMenuClick = (item) => {
@@ -84,43 +86,43 @@ const Layout = () => {
             </Typography>
           </NavButton>
 
-          {isMobile ? (
-            <>
-              <IconButton
-                onClick={() => setDrawerOpen(true)}
-                sx={{ color: "#D4AF37" }}
+          {/* {isMobile ? ( */}
+          <>
+            <IconButton
+              onClick={() => setDrawerOpen(true)}
+              sx={{ color: "#D4AF37" }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor="right"
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+            >
+              <Box
+                sx={{ width: 250 }}
+                role="presentation"
+                height="100%"
+                bgcolor="#fffefa"
               >
-                <MenuIcon />
-              </IconButton>
-              <Drawer
-                anchor="right"
-                open={drawerOpen}
-                onClose={() => setDrawerOpen(false)}
-              >
-                <Box
-                  sx={{ width: 250 }}
-                  role="presentation"
-                  height="100%"
-                  bgcolor="#fffefa"
-                >
-                  <List>
-                    {menuItems.map((item, index) => (
-                      <ListItem
-                        button
-                        key={index}
-                        onClick={() => handleMenuClick(item)}
-                      >
-                        <ListItemText
-                          primary={item.text}
-                          style={{ color: "#e2b937" }}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              </Drawer>
-            </>
-          ) : (
+                <List>
+                  {menuItems.map((item, index) => (
+                    <ListItem
+                      button
+                      key={index}
+                      onClick={() => handleMenuClick(item)}
+                    >
+                      <ListItemText
+                        primary={item.text}
+                        style={{ color: "#e2b937", cursor: "pointer" }}
+                      />
+                    </ListItem>
+                  ))}
+                </List>
+              </Box>
+            </Drawer>
+          </>
+          {/* ) : (
             <Box>
               {menuItems.map((item, index) => (
                 <NavButton
@@ -133,7 +135,7 @@ const Layout = () => {
                 </NavButton>
               ))}
             </Box>
-          )}
+          )} */}
         </StyledToolbar>
       </StyledAppBar>
 
