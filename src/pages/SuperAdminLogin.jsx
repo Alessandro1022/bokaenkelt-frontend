@@ -93,7 +93,8 @@ const SuperAdminogin = () => {
         throw new Error("Felaktig e-post eller lösenord");
       }
     } catch (err) {
-      setError(err.message);
+      console.error(error);
+      setError(err?.response?.data?.message);
     } finally {
       setLoading(false);
     }
