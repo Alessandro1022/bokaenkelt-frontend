@@ -1,22 +1,15 @@
-import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
-const PrivateRoute = ({ children, requireAdmin = false }) => {
+const PrivateRoute = ({ children }) => {
   const location = useLocation();
-  const { user, isAdmin } = useAuth();
+  const { user } = useAuth();
 
-  if (!user) {
-    // Om ingen användare är inloggad
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  if (user?.id) {
+    return children;
+  } else {
+    return <Navigate to="/customer/login" state={{ from: location }} replace />;
   }
-
-  if (requireAdmin && !isAdmin) {
-    // Om admin krävs men användaren inte är admin
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
-  }
-
-  return children;
 };
 
-export default PrivateRoute; 
+export default PrivateRoute;

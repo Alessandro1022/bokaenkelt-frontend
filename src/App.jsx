@@ -17,8 +17,10 @@ import { Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import BookingForm from "./pages/BookingForm";
 import BookingConfirmation from "./pages/BookingConfirmation";
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
+import StylistLogin from "./pages/StylistLogin";
+import SuperAdminLogin from "./pages/SuperAdminLogin";
+import StylistDashboard from "./pages/StylistDashboard";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import CustomerLogin from "./pages/CustomerLogin";
 import CustomerDashboard from "./pages/CustomerDashboard";
 import StylistGrid from "./pages/StylistGrid";
@@ -73,17 +75,33 @@ const router = createBrowserRouter(
         { index: true, element: <Home /> },
         { path: "booking", element: <BookingForm /> },
         { path: "booking-confirmation", element: <BookingConfirmation /> },
-        { path: "admin/login", element: <AdminLogin /> },
         { path: "customer/login", element: <CustomerLogin /> },
+        { path: "stylist/login", element: <StylistLogin /> },
+        { path: "superadmin/login", element: <SuperAdminLogin /> },
         {
-          path: "admin/dashboard",
+          path: "customer/dashboard",
           element: (
-            <PrivateRoute requireAdmin>
-              <AdminDashboard />
+            <PrivateRoute>
+              <CustomerDashboard />
             </PrivateRoute>
           ),
         },
-        { path: "customer/dashboard", element: <CustomerDashboard /> },
+        {
+          path: "stylist/dashboard",
+          element: (
+            <PrivateRoute>
+              <StylistDashboard />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "superadmin/dashboard",
+          element: (
+            <PrivateRoute>
+              <SuperAdminDashboard />
+            </PrivateRoute>
+          ),
+        },
         { path: "stylists", element: <StylistGrid /> },
         { path: "stylist/:stylistId", element: <StylistDetailPage /> },
         { path: "book/:stylistId", element: <BookingForm /> },

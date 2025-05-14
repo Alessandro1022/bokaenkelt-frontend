@@ -53,18 +53,24 @@ const Layout = () => {
 
   const menuItems = [
     { text: "Hem", path: "/" },
-    { text: "Boka tid", path: "/stylists" },
+    ...(user?.role === "superadmin" || user?.role === "stylist"
+      ? []
+      : [{ text: "Boka tid", path: "/stylists" }]),
     ...(user
-      ? user.role === "admin"
-        ? [{ text: "Admin", path: "/admin/dashboard" }]
-        : [{ text: "Min Profil", path: "/admin/dashboard" }]
+      ? user.role === "stylist"
+        ? [{ text: "Min Profil", path: "/stylist/dashboard" }]
+        : user.role === "superadmin"
+        ? [{ text: "Min Profil", path: "/superadmin/dashboard" }]
+        : [{ text: "Min Profil", path: "/stylist/dashboard" }]
       : [
           { text: "Kund Login", path: "/customer/login" },
-          { text: "Admin Login", path: "/admin/login" },
+          { text: "Admin Login", path: "/stylist/login" },
         ]),
     ...(user ? [{ text: "Logga ut", action: handleLogout }] : []),
-    { text: "Kontakt/Om oss", path: "/kontakt" },
-    { text: "Integritetpolicy/GDPR", path: "/integritetpolicy" },
+    ...(user?.id ? [] : [{ text: "Kontakt/Om oss", path: "/kontakt" }]),
+    ...(user?.id
+      ? []
+      : [{ text: "Integritetpolicy/GDPR", path: "/integritetpolicy" }]),
   ];
 
   const handleMenuClick = (item) => {

@@ -56,16 +56,19 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const AdminLogin = () => {
+const StylistLogin = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+
+  // STATES
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
+  // FUNCTIONS
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -73,7 +76,6 @@ const AdminLogin = () => {
       [name]: value,
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -82,20 +84,11 @@ const AdminLogin = () => {
     try {
       const res = await loginUser(formData);
       if (res.data.token.length > 0 && res.data.user.id.length > 0) {
-        await login({
-          email: res.data.user.email,
-          role: res.data.user.role,
-          name: res.data.user.name,
-          id: res.data.user.id,
-          stylist: res.data.user.stylist,
-          hasPremium: res.data.user.hasPremium,
-        });
-        navigate("/admin/dashboard");
-      } else {
-        throw new Error("Felaktig e-post eller lösenord");
+        await login();
+        navigate("/stylist/dashboard");
       }
     } catch (err) {
-      setError(err.message);
+      setError(err?.response?.data?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -150,4 +143,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default StylistLogin;

@@ -37,6 +37,7 @@ import {
 import { useAuth } from "../contexts/AuthContext";
 import { getBookedTimeSlots } from "../api/bookings";
 import { getStylistDetails } from "../api/stylists";
+import { STYLIST_TABS } from "../lib/constants";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const StylistDetailPage = () => {
@@ -219,16 +220,9 @@ const StylistDetailPage = () => {
       setRatingLoader(false);
     }
   };
-  const checkHasPremium = () => {
-    const _tabs = selectedStylist?.hasPremium
-      ? selectedStylist?.tabs
-      : selectedStylist?.tabs?.filter((tab) => {
-          if (["Info", "Calendar"].includes(tab)) {
-            return tab;
-          }
-        });
-
-    return _tabs;
+  const checkVisibleTab = (tabName) => {
+    const isVisible = selectedStylist?.tabs?.includes(tabName);
+    return isVisible;
   };
 
   if (
@@ -271,7 +265,16 @@ const StylistDetailPage = () => {
                   scrollButtons="auto"
                   style={{ borderTop: "1px solid #d4af37" }}
                 >
-                  {checkHasPremium()?.map((tab, index) => {
+                  {/* {checkHasPremium()?.map((tab, index) => {
+                    return (
+                      <Tab
+                        key={index}
+                        label={tab}
+                        style={{ textTransform: "capitalize" }}
+                      />
+                    );
+                  })} */}
+                  {selectedStylist?.tabs?.map((tab, index) => {
                     return (
                       <Tab
                         key={index}
@@ -548,7 +551,7 @@ const StylistDetailPage = () => {
                   </Grid>
                 </CardContent>
 
-                {selectedStylist?.hasPremium && (
+                {checkVisibleTab("Reviews") && (
                   <CardContent
                     id="Reviews"
                     sx={{
@@ -717,7 +720,7 @@ const StylistDetailPage = () => {
                   </CardContent>
                 )}
 
-                {selectedStylist?.hasPremium && (
+                {checkVisibleTab("Photos") && (
                   <CardContent
                     id="Photos"
                     sx={{
@@ -759,7 +762,7 @@ const StylistDetailPage = () => {
                         {selectedStylist?.photos?.map((img, index) => (
                           <img
                             key={index}
-                            src={img}
+                            src={`${API_BASE_URL}/${img}`}
                             style={{
                               width: "30%",
                               height: "auto",
@@ -774,7 +777,7 @@ const StylistDetailPage = () => {
                   </CardContent>
                 )}
 
-                {selectedStylist?.hasPremium && (
+                {checkVisibleTab("Contact") && (
                   <CardContent
                     id="Contact"
                     sx={{
@@ -805,26 +808,43 @@ const StylistDetailPage = () => {
                         }}
                         sx={{ display: "flex", justifyContent: "center" }}
                       >
-                        <div
-                          style={{
-                            width: "100%",
-                            height: "auto",
-                            maxWidth: "500px",
-                            margin: 5,
-                          }}
-                        >
-                          <img
-                            src={`${API_BASE_URL}/${selectedStylist?.location?.map}`}
-                            alt="map location"
+                        {selectedStylist?.location?.map?.length > 0 ? (
+                          <div
                             style={{
                               width: "100%",
-                              height: "50%",
-                              objectFit: "fill",
-                              borderRadius: "15px",
-                              cursor: "pointer",
+                              height: "auto",
+                              maxWidth: "500px",
+                              margin: 5,
                             }}
-                          />
-                        </div>
+                          >
+                            <img
+                              src={`${API_BASE_URL}/${selectedStylist?.location?.map}`}
+                              alt="map location"
+                              style={{
+                                width: "100%",
+                                height: "50%",
+                                objectFit: "fill",
+                                borderRadius: "15px",
+                                cursor: "pointer",
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <Typography
+                            component="p"
+                            gutterBottom
+                            sx={{
+                              fontSize: {
+                                xs: "1.5rem",
+                                sm: "1.5rem",
+                                md: "1.5rem",
+                              },
+                              mb: 2,
+                            }}
+                          >
+                            No Map
+                          </Typography>
+                        )}
                       </Grid>
                       <Grid
                         size={{
