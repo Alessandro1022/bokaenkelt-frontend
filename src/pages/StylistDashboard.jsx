@@ -912,6 +912,24 @@ const StylistDashboard = () => {
                     />
                   </Grid>
 
+                  {/* Map */}
+                  <Grid size={12}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Enter Google Map Iframe URL"
+                      name="name"
+                      type="text"
+                      value={profileForm?.location?.map}
+                      onChange={(e) => {
+                        setProfileForm((prev) => ({
+                          ...prev,
+                          location: { ...prev.location, map: e.target.value },
+                        }));
+                      }}
+                    />
+                  </Grid>
+
                   {/* AVABILITY */}
                   <Typography variant="body2">Avability</Typography>
                   <Grid container size={12}>

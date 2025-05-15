@@ -815,20 +815,13 @@ const StylistDetailPage = () => {
                               height: "auto",
                               maxWidth: "500px",
                               margin: 5,
+                              borderRadius: "15px",
+                              overflow: "hidden",
                             }}
-                          >
-                            <img
-                              src={`${API_BASE_URL}/${selectedStylist?.location?.map}`}
-                              alt="map location"
-                              style={{
-                                width: "100%",
-                                height: "50%",
-                                objectFit: "fill",
-                                borderRadius: "15px",
-                                cursor: "pointer",
-                              }}
-                            />
-                          </div>
+                            dangerouslySetInnerHTML={{
+                              __html: selectedStylist?.location?.map,
+                            }}
+                          ></div>
                         ) : (
                           <Typography
                             component="p"
