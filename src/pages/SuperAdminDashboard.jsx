@@ -84,8 +84,7 @@ const SuperAdminDashboard = () => {
   const handleAddStylist = async () => {
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const passwordRegex =
-        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+      const passwordRegex = /^.{6,}$/;
 
       if (!stylistForm.email.trim()) {
         return alert("Email is required!");
@@ -100,9 +99,7 @@ const SuperAdminDashboard = () => {
       }
 
       if (!passwordRegex.test(stylistForm.password)) {
-        return alert(
-          "Password must be at least 6 characters and include at least one letter, one number, and one special character."
-        );
+        return alert("Password must be at least 6 characters.");
       }
 
       setLoading((prev) => ({ ...prev, addStylist: true }));
