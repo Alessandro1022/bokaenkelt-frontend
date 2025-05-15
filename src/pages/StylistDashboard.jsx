@@ -1014,7 +1014,7 @@ const StylistDashboard = () => {
 
                   {/* TABS */}
                   <Grid size={12}>
-                    <Typography variant="body2">Avability</Typography>
+                    <Typography variant="body2">Tabs</Typography>
                     {STYLIST_TABS?.map((tab, index) => {
                       const isChecked = profileForm?.tabs?.includes(tab);
 
