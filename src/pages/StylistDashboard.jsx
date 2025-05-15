@@ -413,9 +413,13 @@ const StylistDashboard = () => {
       <Box sx={{ py: 4 }}>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "1fr auto",
+            },
             alignItems: "center",
+            rowGap: 2,
             mb: 4,
           }}
         >
@@ -425,21 +429,23 @@ const StylistDashboard = () => {
               fontSize: { xs: "1.5rem", sm: "2rem", md: "2.5rem" },
               fontFamily: "Playfair Display, serif",
               color: "#D4AF37",
-              mb: 3,
             }}
           >
             BokaEnkelt - Admin Panel
           </StyledTypography>
-          <StyledButton
-            variant="contained"
-            onClick={() => setEditProfileDialog(true)}
-            startIcon={<EditSquareIcon />}
+          <Box
             sx={{
-              display: { xs: "none", sm: "none", md: "inline-flex" }, // Hidden on xs and sm, visible on md+
+              justifySelf: { xs: "start", sm: "end" },
             }}
           >
-            Edit Profile
-          </StyledButton>
+            <StyledButton
+              variant="contained"
+              onClick={() => setEditProfileDialog(true)}
+              startIcon={<EditSquareIcon />}
+            >
+              Edit Profile
+            </StyledButton>
+          </Box>
         </Box>
 
         <Grid container spacing={3} sx={{ mb: 4 }}>
