@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import {
   Container,
   Box,
@@ -81,7 +82,13 @@ const SuperAdminogin = () => {
 
     try {
       const res = await loginSuperAdmin(formData);
+
       if (res.data.token.length > 0 && res.data.user.id.length > 0) {
+        Cookies.set("token", res.data.token, {
+          expires: 7, // Expiration time in days
+          secure: true, // Ensures cookie is only sent over HTTPS
+          sameSite: "strict", // Helps prevent CSRF attacks
+        });
         await login({
           email: res.data.user.email,
           role: res.data.user.role,

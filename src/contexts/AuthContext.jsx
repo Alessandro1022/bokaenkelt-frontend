@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 export const AuthContext = createContext();
 
@@ -30,6 +31,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    Cookies.remove("token");
     localStorage.removeItem("user");
   };
 

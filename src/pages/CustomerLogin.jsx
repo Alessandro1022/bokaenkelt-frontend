@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -82,6 +83,11 @@ const CustomerLogin = () => {
     try {
       const res = await loginUser(formData);
       if (res.data.token.length > 0 && res.data.user.id.length > 0) {
+        Cookies.set("token", res.data.token, {
+          expires: 7, // Expiration time in days
+          secure: true, // Ensures cookie is only sent over HTTPS
+          sameSite: "strict", // Helps prevent CSRF attacks
+        });
         await login({
           id: res.data.user.id,
           name: res.data.user.name,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
@@ -113,6 +114,8 @@ const CustomerDashboard = () => {
   };
 
   const handleLogout = () => {
+    Cookies.remove("token");
+    localStorage.removeItem("user");
     navigate("/");
   };
 
@@ -149,8 +152,6 @@ const CustomerDashboard = () => {
 
   const handleSaveEdit = async () => {
     try {
-      console.log("SUBMIT --->", editedBooking);
-
       const res = await updateBookings(editedBooking);
       if (res.status === 200) {
         await loadBookings();

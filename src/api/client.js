@@ -1,70 +1,22 @@
-import axios from 'axios';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
-
-// Mock data for fallbacks
-const mockData = {
-  stylists: [
-    {
-      _id: '1',
-      name: 'Woolley Cutzzz',
-      email: 'woolley@cutzzz.com',
-      phone: '+46 70 123 45 67',
-      specialties: ['Herrklippning', 'Skäggvård'],
-      bio: 'Professionell frisör med fokus på herrklippning och skäggvård. Erbjuder en avslappnad och professionell upplevelse i Kristinedal träningcenter.',
-      experience: 5,
-      rating: 4.9,
-      isActive: true,
-      imageUrl: '/images/stylist1.jpg',
-      availability: {
-        days: ['onsdag', 'torsdag', 'fredag', 'lördag', 'söndag'],
-        hours: {
-          start: '11:00',
-          end: '23:00'
-        }
-      },
-      services: [
-        {
-          id: '1',
-          name: 'Herrklippning',
-          price: 150,
-          duration: '30 min',
-          description: 'Professionell herrklippning med modern finish'
-        },
-        {
-          id: '2',
-          name: 'Herrklippning med skägg',
-          price: 200,
-          duration: '45 min',
-          description: 'Herrklippning inklusive skäggtrimning och styling'
-        }
-      ],
-      location: 'Kristinedal träningcenter'
-    }
-  ],
-  profile: {
-    id: '1',
-    name: 'Test User',
-    email: 'test@example.com',
-    phone: '+46 70 123 45 67',
-    address: 'Götaplatsen 1, 41134 Göteborg',
-    bookings: []
-  }
-};
+import axios from "axios";
+import Cookies from "js-cookie";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // 30 seconds
   headers: {
-    'Content-Type': 'application/json',
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 // Add request interceptor
 api.interceptors.request.use(
   (config) => {
     // Add auth token if available
-    const token = localStorage.getItem('token');
+    // const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -83,30 +35,36 @@ api.interceptors.response.use(
   async (error) => {
     // Handle 401 Unauthorized
     if (error.response?.status === 401) {
-      localStorage.removeItem('token');
+      // localStorage.removeItem("token");
+      Cookies.remove("token");
       // window.location.href = '/customer/login';
       return Promise.reject(error);
     }
 
     // No response from server (network error)
     if (!error.response && error.request) {
-      console.warn('Network error or server not responding, using mock data fallback');
+      console.warn(
+        "Network error or server not responding, using mock data fallback"
+      );
 
       // Extract the path from the URL
       const path = error.config.url;
 
       // Return mock data for known endpoints
-      if (path.includes('/api/stylists') && !path.includes('/api/stylists/')) {
+      if (path.includes("/api/stylists") && !path.includes("/api/stylists/")) {
         return Promise.resolve({ data: mockData.stylists });
       }
 
-      if (path.includes('/api/auth/me') || path.includes('/api/users/profile')) {
+      if (
+        path.includes("/api/auth/me") ||
+        path.includes("/api/users/profile")
+      ) {
         return Promise.resolve({ data: mockData.profile });
       }
 
-      if (path.includes('/api/stylists/') && path.split('/').length > 3) {
-        const id = path.split('/').pop();
-        const stylist = mockData.stylists.find(s => s._id === id);
+      if (path.includes("/api/stylists/") && path.split("/").length > 3) {
+        const id = path.split("/").pop();
+        const stylist = mockData.stylists.find((s) => s._id === id);
         if (stylist) {
           return Promise.resolve({ data: stylist });
         }
@@ -117,4 +75,4 @@ api.interceptors.response.use(
   }
 );
 
-export default api; 
+export default api;
