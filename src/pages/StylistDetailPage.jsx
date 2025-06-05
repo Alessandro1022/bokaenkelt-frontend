@@ -168,7 +168,9 @@ const StylistDetailPage = () => {
         date: selectedDate.toISOString(),
         time: selectedTime,
         stylistName: selectedStylist.name,
+        services: selectedStylist.services,
       };
+
       navigate("/booking", { state: stateData });
     } catch (error) {
       console.error(error);

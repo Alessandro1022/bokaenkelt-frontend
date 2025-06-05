@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   Container,
@@ -85,17 +85,6 @@ const StyledLink = styled("a")(({ theme }) => ({
   },
 }));
 
-// Services data
-const services = [
-  { value: "haircut", label: "Herrklippning", duration: 30, price: 150 },
-  {
-    value: "haircut-beard",
-    label: "Herrklippning med skägg",
-    duration: 45,
-    price: 200,
-  },
-];
-
 const BookingForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -107,7 +96,7 @@ const BookingForm = () => {
     time: location.state?.time
       ? parse(location.state.time, "HH:mm", new Date())
       : null,
-    service: location.state?.service || "",
+    service: "",
     customerName: "",
     // customerPhone: "",
     customerEmail: user?.email || "",
@@ -446,9 +435,12 @@ const BookingForm = () => {
               onChange={handleChange}
               sx={{ mb: 3 }}
             >
-              {services.map((service) => (
-                <MenuItem key={service.value} value={service.value}>
-                  {service.label} - {service.duration} min - {service.price} kr
+              {location?.state?.services.map((service) => (
+                <MenuItem
+                  key={`${service.name}-${service.duration}-${service.price}`}
+                  value={`${service.name}-${service.duration}-${service.price}`}
+                >
+                  {service.name} - {service.duration} min - {service.price} kr
                 </MenuItem>
               ))}
             </TextField>
