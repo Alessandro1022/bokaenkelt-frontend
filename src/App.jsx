@@ -4,7 +4,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import CookieConsent from "react-cookie-consent";
+
+// COMPONENTS
+import CookieConsent from "./components/CookieConsent";
 
 // Pages
 import Home from "./pages/Home";
@@ -124,23 +126,7 @@ function App() {
           </AuthProvider>
         </LocalizationProvider>
       </ThemeProvider>
-      <CookieConsent
-        location="bottom"
-        buttonText="Accept All"
-        declineButtonText="Decline"
-        enableDeclineButton
-        cookieName="cookieConsent"
-        style={{ background: "#2B373B" }}
-        buttonStyle={{ color: "#4e503b", fontSize: "13px" }}
-        declineButtonStyle={{ fontSize: "13px" }}
-        expires={7}
-      >
-        This website uses cookies to enhance the user experience.{" "}
-        <span style={{ color: "#f1d600" }}>Learn more</span>
-        {/* <a href="/privacy-policy" style={{ color: "#f1d600" }}>
-          Learn more
-        </a> */}
-      </CookieConsent>
+      <CookieConsent />
     </>
   );
 }
